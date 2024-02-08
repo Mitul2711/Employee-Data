@@ -5,16 +5,41 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
+//fireStore module
+import { AngularFireModule } from '@angular/fire/compat';
+import { FirestoreModule } from '@angular/fire/firestore'; 
+import { environment } from 'src/environments/environment.prod';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { TableComponent } from './table/table.component';
+import { MaterialModule } from './module/material.module';
+
+
+
+
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+ 
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    FirestoreModule,
+    AngularFireStorageModule,
+    RouterModule,
+    RouterOutlet,
+    MaterialModule,
+    TableComponent
+
   ],
   providers: [],
+  exports:[],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
