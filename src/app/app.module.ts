@@ -12,7 +12,7 @@ import { FirestoreModule } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment.prod';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { TableComponent } from './table/table.component';
+import { TableComponent } from './components/table/table.component';
 import { MaterialModule } from './module/material.module';
 
 

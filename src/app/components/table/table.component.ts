@@ -1,34 +1,35 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort } from '@angular/material/sort';
+import { MaterialModule } from '../../module/material.module';
 
-export interface UserData {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: number;
-  gender: string;
-  language: string;
-  dob: Date;
-  salary: string;
-  profile: string;
-}
+
+
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],
+  imports: [MaterialModule],
 })
 
 
 export class TableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'firstName', 'lastName', 'email', 'phone', 'gender', 'language', 'dob', 'salary', 'profile'];
+  displayedColumns: string[] = [
+    'id',
+     'firstName', 
+     'lastName',
+     'email', 
+     'phone', 
+     'gender', 
+     'language', 
+     'dob', 
+     'salary', 
+     'profile',
+     'action'
+    ];
+    
   dataSource: any;
 
   @ViewChild(MatPaginator)
@@ -52,7 +53,6 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
   
-
 
   ngOnInit(): void {
     
