@@ -14,6 +14,7 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { TableComponent } from './components/table/table.component';
 import { MaterialModule } from './module/material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -35,7 +36,9 @@ import { MaterialModule } from './module/material.module';
     RouterModule,
     RouterOutlet,
     MaterialModule,
-    TableComponent
+    TableComponent,
+    ReactiveFormsModule,
+    FormsModule
 
   ],
   providers: [],

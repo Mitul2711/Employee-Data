@@ -19,3 +19,66 @@ td, th {
  .container {
   margin: 10px;
 } 
+
+.box {
+  display: flex;
+  flex-direction: row;
+}
+
+.card {
+  max-width: 800px;
+  height: auto;
+}
+
+.formBox {
+  position: fixed; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  z-index: 3;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1.5);
+}
+
+.example-section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 60px;
+}
+
+.example-margin {
+  margin: 0 10px;
+}
+
+
+.example-additional-selection {
+  opacity: 0.75;
+  font-size: 0.75em;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  backdrop-filter: blur(2px); 
+  z-index: 2; 
+}
+
+.mg {
+  margin-right: 15px;
+}
+
+.error {
+  margin-top: 4px; 
+  font-size: 0.75rem;
+}
+
+.mat-form-field + .error {
+  margin-top: -18px; /* Adjust as needed */
+}

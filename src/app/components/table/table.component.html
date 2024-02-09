@@ -1,6 +1,5 @@
-
 <div class="container">
-    <button mat-raised-button>Add Data</button>
+    <button mat-raised-button (click)="openForm()">Add Data</button>
 </div>
 
 <div>
@@ -15,7 +14,7 @@
 <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 
-     
+
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
             <!-- <td mat-cell *matCellDef="let row">  </td> -->
@@ -79,10 +78,130 @@
 
 
         <tr class="mat-row" *matNoDataRow>
-            
+
         </tr>
     </table>
 
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
 </div>
 
+
+<!-- pop-up form -->
+
+<!-- pop-up form -->
+<ng-template #employeeData>
+
+    <div class="overlay"></div>
+
+    <div class="formBox">
+
+        <mat-card class="card">
+
+            <mat-card-content>
+
+                <h2 class="text-center">Employee-Data</h2>
+
+                <form [formGroup]="employeeForm">
+                    <div class="box">
+
+                        <mat-form-field class="mg">
+                            <mat-label>FirstName</mat-label>
+                            <input matInput type="text" formControlName="firstName">
+                            <mat-error>First name is required.</mat-error>
+                        </mat-form-field>
+                        <!-- <div class="error"
+                            *ngIf="getControl('firstName')?.invalid && (getControl('firstName')?.dirty || getControl('firstName')?.touched)">
+                            <p class="text-danger" *ngIf="getControl('firstName')?.errors?.hasOwnProperty('required')">
+                                First name is required.</p>
+                        </div> -->
+
+
+
+                        <mat-form-field>
+                            <mat-label>LastName</mat-label>
+                            <input matInput type="text" formControlName="lastName">
+                            <mat-error>Last name is required.</mat-error>
+                        </mat-form-field>
+
+
+                    </div>
+
+                    <div class="box">
+                        <mat-form-field class="mg">
+                            <mat-label>Email</mat-label>
+                            <input matInput type="email" formControlName="email">
+                            <mat-error *ngIf="getControl('email')?.hasError('required') && (getControl('email')?.touched || getControl('email')?.dirty)">
+                                Email is required.
+                            </mat-error>
+                            <mat-error *ngIf="getControl('email')?.hasError('email') && getControl('email')?.dirty">
+                                Please enter a valid Email.
+                            </mat-error>
+                            
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>Phone</mat-label>
+                            <input matInput type="number" formControlName="phone">
+                            <mat-error>Phone Number is required</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <section class="example-section">
+                        <label class="example-margin">Gender:</label>
+                        <mat-radio-group formControlName="gender">
+                            <mat-radio-button class="example-margin" value="male">Male</mat-radio-button>
+                            <mat-radio-button class="example-margin" value="female">Female</mat-radio-button>
+                        </mat-radio-group>
+                    </section>
+
+                    <div class="box">
+                        <mat-form-field class="mg">
+                            <mat-label>Language</mat-label>
+                            <mat-select formControlName="language" multiple>
+                                <mat-select-trigger>
+                                    {{ employeeForm.value?.[0] || '' }}
+                                    <span class="example-additional-selection"
+                                        *ngIf="employeeForm.value && employeeForm.value.length > 1">
+                                        (+{{ employeeForm.value.length - 1 }} {{ employeeForm.value.length === 2 ?
+                                        'other' : 'others' }})
+                                    </span>
+                                </mat-select-trigger>
+                                <mat-option *ngFor="let topping of toppingList" [value]="topping">{{ topping
+                                }}</mat-option>
+                            </mat-select>
+                            <mat-error>Please select Language</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>DOB</mat-label>
+                            <input matInput [matDatepicker]="datepicker" formControlName="dob">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                            <mat-datepicker #datepicker></mat-datepicker>
+                            <mat-error>Please enter date.</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <mat-form-field>
+                        <mat-label>Salary</mat-label>
+                        <input matInput type="number" formControlName="salary">
+                        <mat-error>Please enter salary amount</mat-error>
+                    </mat-form-field>
+
+
+                    <button mat-raised-button (click)="closeForm()">Submit</button>
+                </form>
+
+            </mat-card-content>
+
+        </mat-card>
+
+    </div>
+
+</ng-template>
+
+
+
+<ng-container *ngIf="formVisible">
+    <ng-container *ngTemplateOutlet="employeeData"></ng-container>
+</ng-container>
