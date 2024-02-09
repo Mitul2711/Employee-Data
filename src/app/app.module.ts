@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import {MatCardModule} from '@angular/material/card';
+
 
 //fireStore module
 import { AngularFireModule } from '@angular/fire/compat';
@@ -15,6 +17,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { TableComponent } from './components/table/table.component';
 import { MaterialModule } from './module/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ImageUploadComponent } from './components/image-upload/image-upload.component';
 
 
 
@@ -23,6 +26,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
+    
  
 
   ],
@@ -38,8 +42,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MaterialModule,
     TableComponent,
     ReactiveFormsModule,
-    FormsModule
-
+    FormsModule,
+    MatCardModule,
+    ImageUploadComponent
   ],
   providers: [],
   exports:[],

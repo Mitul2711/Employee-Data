@@ -99,9 +99,9 @@
 
             <mat-card-content>
 
-                <h2 class="text-center">Employee-Data</h2>
+                <h2 class="text-center tc">Employee-Data</h2>
 
-                <form [formGroup]="employeeForm">
+                <form class="form-content" [formGroup]="employeeForm">
                     <div class="box">
 
                         <mat-form-field class="mg">
@@ -109,20 +109,12 @@
                             <input matInput type="text" formControlName="firstName">
                             <mat-error>First name is required.</mat-error>
                         </mat-form-field>
-                        <!-- <div class="error"
-                            *ngIf="getControl('firstName')?.invalid && (getControl('firstName')?.dirty || getControl('firstName')?.touched)">
-                            <p class="text-danger" *ngIf="getControl('firstName')?.errors?.hasOwnProperty('required')">
-                                First name is required.</p>
-                        </div> -->
-
-
 
                         <mat-form-field>
                             <mat-label>LastName</mat-label>
                             <input matInput type="text" formControlName="lastName">
                             <mat-error>Last name is required.</mat-error>
                         </mat-form-field>
-
 
                     </div>
 
@@ -188,6 +180,7 @@
                         <mat-error>Please enter salary amount</mat-error>
                     </mat-form-field>
 
+                    <app-image-upload></app-image-upload>
 
                     <button mat-raised-button (click)="closeForm()">Submit</button>
                 </form>

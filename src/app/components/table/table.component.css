@@ -26,6 +26,7 @@ td, th {
 }
 
 .card {
+  position: relative;
   max-width: 800px;
   height: auto;
 }
@@ -36,11 +37,31 @@ td, th {
   left: 50%; 
   transform: translate(-50%, -50%); 
   z-index: 3;
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  box-shadow: 0 0 10px rgba(0, 0, 0, 1.5);
+  max-width: 800px; /* Adjust maximum width as needed */
+  max-height: 80vh; /* Adjust maximum height as needed */
+  overflow: auto; /* Enable scrolling */
 }
+
+.card-content {
+  padding-top: 50px; /* Adjust top padding to make space for the title */
+}
+
+.tc {
+  position: fixed; /* Make the title fixed within the card */
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-top: 10px;
+  background-color: #fff; /* Ensure the title background is white */
+  z-index: 1; /* Ensure the title appears above other content */
+}
+
+.form-content {
+  margin-top: 40px;
+  padding-bottom: 50px; /* Adjust bottom padding to make space for scrolling */
+}
+
+
 
 .example-section {
   display: flex;

@@ -7,6 +7,7 @@ import { FloatLabelType } from '@angular/material/form-field';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { ImageUploadComponent } from '../image-upload/image-upload.component';
 
 
 
@@ -15,7 +16,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
   standalone: true,
-  imports: [CommonModule, MaterialModule, MatNativeDateModule, MatCheckboxModule, ReactiveFormsModule ],
+  imports: [CommonModule, MaterialModule, MatNativeDateModule, MatCheckboxModule, ReactiveFormsModule, ImageUploadComponent ],
 })
 
 

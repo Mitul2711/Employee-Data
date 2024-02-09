@@ -1,0 +1,19 @@
+
+<div class="card">
+    <div class="card-content">
+      <h3>Upload Employee Image</h3>
+      <div *ngIf="imageUrl" class="image-container">
+        <div class="image-card">
+          <img [src]="imageUrl" alt="Selected Image" (click)="openImageInCard($event)">
+        </div>
+      </div>
+  
+      <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+        <p>Drag & drop an image file here</p>
+        <div class="image-input-container">
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+        </div>
+      </div>
+    </div>
+  </div>
+  
