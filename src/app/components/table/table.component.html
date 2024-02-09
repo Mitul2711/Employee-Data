@@ -70,7 +70,7 @@
 
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
-            <!-- <td mat-cell *matCellDef="let row"> img </td> -->
+            <td mat-cell *matCellDef="let row"> <i class="fa-solid fa-pen"></i> </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -101,7 +101,7 @@
 
                 <h2 class="text-center tc">Employee-Data</h2>
 
-                <form class="form-content" [formGroup]="employeeForm">
+                <form class="form-content" [formGroup]="employeeForm" (submit)="closeForm()">
                     <div class="box">
 
                         <mat-form-field class="mg">
@@ -149,19 +149,16 @@
                     <div class="box">
                         <mat-form-field class="mg">
                             <mat-label>Language</mat-label>
-                            <mat-select formControlName="language" multiple>
+                            <mat-select formControlName="language" multiple (selectionChange)="onSelectionChange($event)">
                                 <mat-select-trigger>
-                                    {{ employeeForm.value?.[0] || '' }}
-                                    <span class="example-additional-selection"
-                                        *ngIf="employeeForm.value && employeeForm.value.length > 1">
-                                        (+{{ employeeForm.value.length - 1 }} {{ employeeForm.value.length === 2 ?
-                                        'other' : 'others' }})
+                                    {{ selectedLanguages.length > 0 ? selectedLanguages.join(', ') : 'Select language' }}
+                                    <span class="example-additional-selection" *ngIf="selectedLanguages.length > 1">
+                                        (+{{ selectedLanguages.length - 1 }} {{ selectedLanguages.length === 2 ? 'other' : 'others' }})
                                     </span>
                                 </mat-select-trigger>
-                                <mat-option *ngFor="let topping of toppingList" [value]="topping">{{ topping
-                                }}</mat-option>
+                                <mat-option *ngFor="let topping of toppingList" [value]="topping">{{ topping }}</mat-option>
                             </mat-select>
-                            <mat-error>Please select Language</mat-error>
+                            <mat-error *ngIf="!selectedLanguages.length">Please select at least one language</mat-error>
                         </mat-form-field>
 
                         <mat-form-field>
@@ -180,7 +177,23 @@
                         <mat-error>Please enter salary amount</mat-error>
                     </mat-form-field>
 
-                    <app-image-upload></app-image-upload>
+                    <div class="card">
+                        <div class="card-content">
+                          <h3>Upload Employee Image</h3>
+                          <div *ngIf="imageUrl" class="image-container">
+                            <div class="image-card"  (click)="openImageInCard($event)">
+                              <img [src]="imageUrl" alt="Selected Image">
+                            </div>
+                          </div>
+                      
+                          <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+                            <p>Drag & drop an image file here</p>
+                            <div class="image-input-container">
+                              <input type="file" (change)="onFileSelected($event)" accept="image/*" formControlName="profile" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
                     <button mat-raised-button (click)="closeForm()">Submit</button>
                 </form>

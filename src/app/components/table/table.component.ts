@@ -50,8 +50,22 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort)
   sort!: MatSort;
 
+  imageUrl: string | ArrayBuffer | null = null;  
+  selectedLanguages: string[] = [];
   
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    this.employeeForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', Validators.required],
+      gender: ['', Validators.required], 
+      language: ['', Validators.required],
+      dob: ['', Validators.required], 
+      salary: ['', Validators.required],
+      profile: ['', Validators.required]
+    })
+  }
 
 
   ngAfterViewInit() {
@@ -71,18 +85,10 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-    this.employeeForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      gender: ['', Validators.required], 
-      language: [[], Validators.required],
-      dob: ['', Validators.required], 
-      salary: ['', Validators.required],
-      profile: ['', Validators.required]
-    })
-    
+  }
+
+  onSelectionChange(event: any) {
+    this.selectedLanguages = event.value;
   }
 
   getControl(fieldName: string) {
@@ -96,7 +102,46 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   closeForm() {
     this.formVisible = false;
+    console.log(this.employeeForm.value);
   }
 
+  
+
+  // image-input
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.handleFile(file);
+    }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.handleFile(file);
+      
+    }
+  }
+
+  private handleFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imageUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+ 
+  openImageInCard(event: MouseEvent) {
+    event.preventDefault();
+  }
 
 }
