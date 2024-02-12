@@ -17,7 +17,6 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { TableComponent } from './components/table/table.component';
 import { MaterialModule } from './module/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ImageUploadComponent } from './components/image-upload/image-upload.component';
 
 
 
@@ -43,8 +42,7 @@ import { ImageUploadComponent } from './components/image-upload/image-upload.com
     TableComponent,
     ReactiveFormsModule,
     FormsModule,
-    MatCardModule,
-    ImageUploadComponent
+    MatCardModule
   ],
   providers: [],
   exports:[],

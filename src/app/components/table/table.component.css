@@ -136,3 +136,8 @@ td, th {
   height: 100%;
   object-fit: cover;
 }
+
+
+.btn {
+  margin-left: 10px;
+}
