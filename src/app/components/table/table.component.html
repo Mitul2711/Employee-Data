@@ -55,7 +55,7 @@
 
         <ng-container matColumnDef="dob">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Dob </th>
-            <td mat-cell *matCellDef="let row"> {{row.dob.toMillis() | date}} </td>
+            <td mat-cell *matCellDef="let row"> {{row.dob}} </td>
         </ng-container>
 
         <ng-container matColumnDef="salary">
@@ -65,7 +65,7 @@
 
         <ng-container matColumnDef="profile">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Profile </th>
-            <td mat-cell *matCellDef="let row"> {{row.profile}} </td>
+            <td mat-cell *matCellDef="let row"> <img src="{{row.profile}}" width="80px" height="70px"> </td>
         </ng-container>
 
         <ng-container matColumnDef="action">

@@ -11,6 +11,7 @@ import { UserData } from 'src/app/model/user-data';
 import { UserDataService } from 'src/app/services/user-data.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { map } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -56,9 +57,11 @@ export class TableComponent implements OnInit, AfterViewInit {
   imageUrl: string | ArrayBuffer | null = null;
   selectedLanguages: string[] = [];
   imgSrc: any = './assets/placeholder-img.png';
-  userDataArray: any
+  userDataArray: any;
+  docId: any;
+  post: any;
 
-  constructor(private fb: FormBuilder, private userService: UserDataService) {
+  constructor(private fb: FormBuilder, private userService: UserDataService, private route: ActivatedRoute) {
     this.dataSource = new MatTableDataSource<UserData>();
 
     this.employeeForm = this.fb.group({
@@ -71,6 +74,16 @@ export class TableComponent implements OnInit, AfterViewInit {
       dob: ['', Validators.required],
       salary: ['', Validators.required],
       profile: ['', Validators.required]
+    })
+  
+
+    this.route.queryParams.subscribe(val => {
+      this.docId =  val['id'];
+
+      this.userService.loadImg(this.docId).subscribe(val => {
+        this.post = val;
+        this.imgSrc = this.post.profile
+      })
     })
     
   }

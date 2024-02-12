@@ -51,4 +51,9 @@ export class UserDataService implements OnInit {
     )
   }
 
+  loadImg(id: any) {
+    return this.afs.collection('employee').doc(id).valueChanges();
+    // this.storage.refFromURL(filePa)
+  }
+
 }
