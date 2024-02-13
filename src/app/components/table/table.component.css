@@ -143,5 +143,6 @@ td, th {
 
 i {
   font-size: 25px;
-  margin: 2px;
+  margin: 4px;
+  cursor: pointer;
 }

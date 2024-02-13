@@ -12,6 +12,8 @@ import { UserDataService } from 'src/app/services/user-data.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
+import { DatePipe } from '@angular/common';
+
 
 
 
@@ -87,7 +89,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       language: ['', Validators.required],
       dob: ['', Validators.required],
       salary: ['', Validators.required],
-      profile: ['', Validators.required]
+      profile: ['']
     })
   
 
@@ -101,7 +103,6 @@ export class TableComponent implements OnInit, AfterViewInit {
     })
     
   }
-
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -120,16 +121,21 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.displayData();
+    // console.log(this.userDataArray);
+    
   }
 
   displayData() {
     this.userService.loadData().subscribe(val => {
-      this.userDataArray = val;
+      this.userDataArray = val;      
       
-      this.dataSource = this.userDataArray.map((item: { data: any; }) => item.data); 
+      this.dataSource = this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data })); 
+      console.log(this.dataSource);
+      
       this.dataSource.paginator = this.paginator;     
     })
   }
+  
 
   onSelectionChange(event: any) {
     this.selectedLanguages = event.value;
@@ -147,6 +153,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   closeForm() {
     this.formVisible = false;  
+    this.employeeForm.reset();
   }
 
   onSubmit() {
@@ -157,7 +164,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       phone: this.employeeForm.value.phone,
       gender: this.employeeForm.value.gender,
       language: this.employeeForm.value.language,
-      dob: this.employeeForm.value.dob,
+      dob: new Date(),
       salary: this.employeeForm.value.salary,
       profile: ''
     }
@@ -165,8 +172,11 @@ export class TableComponent implements OnInit, AfterViewInit {
     console.log(employeeData);
     
     this.imgSrc = './assets/placeholder-img.png';
-    this.employeeForm.reset();
     
+  }
+
+  deleteData(profile: any, docId: any) {
+    this.userService.deleteImage(profile, docId);
   }
 
 

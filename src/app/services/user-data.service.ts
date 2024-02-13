@@ -56,4 +56,19 @@ export class UserDataService implements OnInit {
     // this.storage.refFromURL(filePa)
   }
 
+  deleteData(id: any) {
+    this.afs.collection('employee').doc(id).delete().then(() => {
+      console.log('data deleted');
+      
+    })
+  }
+
+  deleteImage(profile: any, id: any) {
+    this.storage.storage.refFromURL(profile).delete().then(() => {
+      this.deleteData(id);
+      console.log("img deleted");
+      
+    })
+  }
+
 }
