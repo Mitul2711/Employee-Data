@@ -137,7 +137,11 @@ td, th {
   object-fit: cover;
 }
 
-
 .btn {
   margin-left: 10px;
+}
+
+i {
+  font-size: 25px;
+  margin: 2px;
 }

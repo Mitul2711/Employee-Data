@@ -1,17 +1,18 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MaterialModule } from '../../module/material.module';
 import { CommonModule } from '@angular/common';
-import { FloatLabelType } from '@angular/material/form-field';
+import { FloatLabelType, MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { UserData } from 'src/app/model/user-data';
 import { UserDataService } from 'src/app/services/user-data.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { map } from 'rxjs/operators';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { MatInputModule } from '@angular/material/input';
+
 
 
 @Component({
@@ -19,7 +20,18 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
   standalone: true,
-  imports: [CommonModule, MaterialModule, MatNativeDateModule, MatCheckboxModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, 
+    MaterialModule, 
+    MatNativeDateModule, 
+    MatCheckboxModule, 
+    ReactiveFormsModule, 
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule
+   ],
 })
 
 
@@ -41,7 +53,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   employeeForm: FormGroup;
 
-  dataSource: any = new MatTableDataSource();
+  dataSource: MatTableDataSource<any>;
   selectedImage: any;
   formVisible: boolean = false;
 
@@ -49,10 +61,8 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   languageList: string[] = ['English', 'Hindi', 'Gujarati', 'French', 'German'];
 
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
-  @ViewChild(MatSort)
-  sort!: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   imageUrl: string | ArrayBuffer | null = null;
   selectedLanguages: string[] = [];
@@ -61,7 +71,11 @@ export class TableComponent implements OnInit, AfterViewInit {
   docId: any;
   post: any;
 
-  constructor(private fb: FormBuilder, private userService: UserDataService, private route: ActivatedRoute) {
+  constructor(
+    private fb: FormBuilder, 
+    private userService: UserDataService, 
+    private route: ActivatedRoute,
+    ) {
     this.dataSource = new MatTableDataSource<UserData>();
 
     this.employeeForm = this.fb.group({
@@ -82,7 +96,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
       this.userService.loadImg(this.docId).subscribe(val => {
         this.post = val;
-        this.imgSrc = this.post.profile
+        // this.imgSrc = this.post.profile
       })
     })
     
@@ -95,9 +109,9 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.search = filterValue.trim().toLowerCase();
-
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = filterValue;
+  
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -105,11 +119,15 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    this.displayData();
+  }
+
+  displayData() {
     this.userService.loadData().subscribe(val => {
-      this.userDataArray = val[0];
+      this.userDataArray = val;
       
-      this.dataSource = Object.values(this.userDataArray);
-          
+      this.dataSource = this.userDataArray.map((item: { data: any; }) => item.data); 
+      this.dataSource.paginator = this.paginator;     
     })
   }
 
@@ -147,6 +165,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     console.log(employeeData);
     
     this.imgSrc = './assets/placeholder-img.png';
+    this.employeeForm.reset();
     
   }
 

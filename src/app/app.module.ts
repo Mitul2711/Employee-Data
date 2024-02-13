@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {MatCardModule} from '@angular/material/card';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 //fireStore module
@@ -24,10 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    
- 
-
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +40,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TableComponent,
     ReactiveFormsModule,
     FormsModule,
-    MatCardModule
+    MatCardModule,
+    // MatTableDataSource
   ],
   providers: [],
   exports:[],
