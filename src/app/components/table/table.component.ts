@@ -3,7 +3,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MaterialModule } from '../../module/material.module';
 import { CommonModule } from '@angular/common';
-import { FloatLabelType, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -12,7 +12,6 @@ import { UserDataService } from 'src/app/services/user-data.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
-import { DatePipe } from '@angular/common';
 
 
 
@@ -34,6 +33,7 @@ import { DatePipe } from '@angular/common';
     MatSortModule,
     MatPaginatorModule
    ],
+   providers: [MatSortModule]
 })
 
 
@@ -55,7 +55,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   employeeForm: FormGroup;
 
-  dataSource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<UserData>;
   selectedImage: any;
   formVisible: boolean = false;
 
@@ -78,9 +78,10 @@ export class TableComponent implements OnInit, AfterViewInit {
     private userService: UserDataService, 
     private route: ActivatedRoute,
     ) {
-    this.dataSource = new MatTableDataSource<UserData>();
+    this.dataSource = new MatTableDataSource<UserData>(this.userDataArray);
 
     this.employeeForm = this.fb.group({
+      id: [0],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -121,7 +122,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.displayData();
-    // console.log(this.userDataArray);
     
   }
 
@@ -129,8 +129,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.userService.loadData().subscribe(val => {
       this.userDataArray = val;      
       
-      this.dataSource = this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data })); 
-      console.log(this.dataSource);
+      this.dataSource = new MatTableDataSource
+      (this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data }))); 
       
       this.dataSource.paginator = this.paginator;     
     })
@@ -158,6 +158,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     const employeeData: UserData = {
+      id: 0,
       firstName: this.employeeForm.value.firstName,
       lastName: this.employeeForm.value.lastName,
       email: this.employeeForm.value.email,
@@ -169,7 +170,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       profile: ''
     }
     this.userService.uploadImage(this.selectedImage, employeeData);
-    console.log(employeeData);
     
     this.imgSrc = './assets/placeholder-img.png';
     

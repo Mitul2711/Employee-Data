@@ -7,6 +7,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {MatCardModule} from '@angular/material/card';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+
 
 
 //fireStore module
@@ -41,9 +45,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     FormsModule,
     MatCardModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
     // MatTableDataSource
   ],
-  providers: [],
+  providers: [MatSortModule],
   exports:[],
   bootstrap: [AppComponent]
 })

@@ -1,5 +1,5 @@
 export interface UserData {
-    // id: string;
+    id: number;
     firstName: string;
     lastName: string;
     email: string;
@@ -8,5 +8,5 @@ export interface UserData {
     language: string[];
     dob: Date;
     salary: string;
-    profile: string;
+    profile: '';
   }

@@ -2,14 +2,11 @@
     <button mat-raised-button (click)="openForm()">Add Data</button>
 </div>
 
-<div>
-    <mat-form-field>
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
-      </mat-form-field>
-</div>
 
-
+<mat-form-field>
+    <mat-label>Search</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Search your content here.." #input>
+</mat-form-field>
 
 <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
@@ -54,8 +51,8 @@
         </ng-container>
 
         <ng-container matColumnDef="dob">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 200px;"> Dob </th>
-            <td mat-cell *matCellDef="let row" style="width: 200px;"> {{ row.data.dob.toDate() | date }} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 120px;"> Dob </th>
+            <td mat-cell *matCellDef="let row" style="width: 120px;"> {{ row.data.dob.toDate() | date }} </td>
         </ng-container>
 
         <ng-container matColumnDef="salary">
@@ -79,9 +76,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-
         <tr class="mat-row" *matNoDataRow>
-
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
         </tr>
     </table>
 
