@@ -129,6 +129,7 @@ td, th {
   border-radius: 5px;
   overflow: hidden;
   margin-bottom: 10px;
+  margin-left: 116px;
 }
 
 .image-card img {
@@ -146,3 +147,23 @@ i {
   margin-right: 8px;
   cursor: pointer;
 }
+
+.underline-input {
+  border: none;
+  border-bottom: 1px solid black; 
+  outline: none; 
+}
+
+.select-box {
+  border: 1px solid #ccc;
+  border-radius: 4px; 
+  padding: 5px; 
+}
+
+
+
+
+
+
+
+

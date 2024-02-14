@@ -53,7 +53,6 @@ export class UserDataService implements OnInit {
 
   loadImg(id: any) {
     return this.afs.collection('employee').doc(id).valueChanges();
-    // this.storage.refFromURL(filePa)
   }
 
   deleteData(id: any) {
@@ -67,6 +66,19 @@ export class UserDataService implements OnInit {
     this.storage.storage.refFromURL(profile).delete().then(() => {
       this.deleteData(id);
       console.log("img deleted");
+      
+    })
+  }
+
+  editData(id: any, employeeData: any) {
+    this.afs.collection('employee').doc(id).update(employeeData).then(() => {
+      console.log("Data edited");
+    })
+  }
+
+  loadOneData(id: any) {
+    return this.afs.collection('employee').doc(id).valueChanges(() => {
+      console.log('loadOneData');
       
     })
   }

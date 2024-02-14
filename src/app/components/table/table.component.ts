@@ -4,7 +4,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MaterialModule } from '../../module/material.module';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { UserData } from 'src/app/model/user-data';
@@ -22,18 +22,19 @@ import { MatInputModule } from '@angular/material/input';
   styleUrls: ['./table.component.css'],
   standalone: true,
   imports: [
-    CommonModule, 
-    MaterialModule, 
-    MatNativeDateModule, 
-    MatCheckboxModule, 
-    ReactiveFormsModule, 
+    CommonModule,
+    MaterialModule,
+    MatNativeDateModule,
+    MatCheckboxModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
     MatSortModule,
-    MatPaginatorModule
-   ],
-   providers: [MatSortModule]
+    MatPaginatorModule,
+    FormsModule
+  ],
+  providers: [MatSortModule]
 })
 
 
@@ -55,9 +56,11 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   employeeForm: FormGroup;
 
-  dataSource: MatTableDataSource<UserData>;
+  dataSource: MatTableDataSource<any>;
   selectedImage: any;
   formVisible: boolean = false;
+  editData: boolean = true;
+  editingRowId: string = '';
 
   toppings = new FormControl('');
 
@@ -70,39 +73,56 @@ export class TableComponent implements OnInit, AfterViewInit {
   selectedLanguages: string[] = [];
   imgSrc: any = './assets/placeholder-img.png';
   userDataArray: any;
+  dataArray: any[] = [];
   docId: any;
   post: any;
 
   constructor(
-    private fb: FormBuilder, 
-    private userService: UserDataService, 
+    private fb: FormBuilder,
+    private userService: UserDataService,
     private route: ActivatedRoute,
-    ) {
-    this.dataSource = new MatTableDataSource<UserData>(this.userDataArray);
+  ) {
 
-    this.employeeForm = this.fb.group({
-      id: [0],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      gender: ['', Validators.required],
-      language: ['', Validators.required],
-      dob: ['', Validators.required],
-      salary: ['', Validators.required],
-      profile: ['']
-    })
-  
+   
+
 
     this.route.queryParams.subscribe(val => {
-      this.docId =  val['id'];
+      this.docId = val['id'];
+      if(this.docId) {
+        this.userService.loadOneData(this.docId).subscribe(post => {
+          this.post = post;
 
-      this.userService.loadImg(this.docId).subscribe(val => {
-        this.post = val;
-        // this.imgSrc = this.post.profile
-      })
+          this.employeeForm = this.fb.group({
+            id: [],
+            firstName: [this.post.firstName, Validators.required],
+            lastName: [this.post.lastName, Validators.required],
+            email: [this.post.email, [Validators.required, Validators.email]],
+            phone: [this.post.phone, Validators.required],
+            gender: [this.post.gender, Validators.required],
+            language: [this.post.language, Validators.required],
+            dob: [this.post.dob, Validators.required],
+            salary: [this.post.salary, Validators.required],
+            profile: ['']
+          })
+
+        })
+      }
+      else {
+        this.employeeForm = this.fb.group({
+          id: [],
+          firstName: ['', Validators.required],
+          lastName: ['', Validators.required],
+          email: ['', [Validators.required, Validators.email]],
+          phone: ['', Validators.required],
+          gender: ['', Validators.required],
+          language: ['', Validators.required],
+          dob: ['', Validators.required],
+          salary: ['', Validators.required],
+          profile: ['']
+        })
+      }
     })
-    
+
   }
 
   ngAfterViewInit() {
@@ -111,31 +131,31 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.dataSource.filter = filterValue;
-  
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-
   ngOnInit(): void {
-    this.displayData();
-    
+    this.displayData();   
   }
 
   displayData() {
     this.userService.loadData().subscribe(val => {
-      this.userDataArray = val;      
+      this.dataArray = val;
       
+      this.userDataArray = val;
+      console.log(this.dataArray);
+
+
       this.dataSource = new MatTableDataSource
-      (this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data }))); 
-      
-      this.dataSource.paginator = this.paginator;     
+        (this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data })));
+
+      this.dataSource.paginator = this.paginator;
+      // console.log(this.dataSource.data);
+
     })
   }
-  
+
 
   onSelectionChange(event: any) {
     this.selectedLanguages = event.value;
@@ -152,27 +172,25 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   closeForm() {
-    this.formVisible = false;  
+    this.formVisible = false;
     this.employeeForm.reset();
   }
 
   onSubmit() {
     const employeeData: UserData = {
-      id: 0,
+      id: this.employeeForm.value.id,
       firstName: this.employeeForm.value.firstName,
       lastName: this.employeeForm.value.lastName,
       email: this.employeeForm.value.email,
       phone: this.employeeForm.value.phone,
       gender: this.employeeForm.value.gender,
       language: this.employeeForm.value.language,
-      dob: new Date(),
+      dob: this.employeeForm.value.dob,
       salary: this.employeeForm.value.salary,
       profile: ''
     }
     this.userService.uploadImage(this.selectedImage, employeeData);
-    
-    this.imgSrc = './assets/placeholder-img.png';
-    
+
   }
 
   deleteData(profile: any, docId: any) {
@@ -200,15 +218,17 @@ export class TableComponent implements OnInit, AfterViewInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.handleFile(file);
-    }
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imgSrc = e.target?.result as string;
       };
       reader.readAsDataURL(file);
       this.selectedImage = file;
+    }else {
+      
+      this.imgSrc = './assets/placeholder-img.png';
+      
+      this.selectedImage = null;
     }
   }
 
@@ -223,6 +243,13 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   openImageInCard(event: MouseEvent) {
     event.preventDefault();
+  }
+
+  // edit Data
+
+  onEdit(id: any) {
+    this.editData = false;
+    this.editingRowId = id
   }
 
 }
