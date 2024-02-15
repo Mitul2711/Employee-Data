@@ -220,7 +220,8 @@ var TableComponent = /** @class */ (function () {
                 sort_1.MatSortModule,
                 paginator_1.MatPaginatorModule,
                 forms_1.FormsModule,
-                datepicker_1.MatDatepickerModule
+                datepicker_1.MatDatepickerModule,
+                CurrencyMaskModule
             ],
             providers: [sort_1.MatSortModule]
         })

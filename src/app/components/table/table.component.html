@@ -126,7 +126,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 60px;"> Salary </th>
                 <td mat-cell *matCellDef="let row" style="width: 60px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input type="text" class="underline-input" [(ngModel)]="editingRowData.salary" style="width: 60px;">
+                        <input currencyMask  type="text" class="underline-input" [(ngModel)]="editingRowData.salary" style="width: 60px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.salary }}
@@ -264,7 +264,7 @@
 
                     <mat-form-field>
                         <mat-label>Salary</mat-label>
-                        <input matInput type="number" formControlName="salary">
+                        <input currencyMask matInput type="text" formControlName="salary" >
                         <mat-error>Please enter salary amount</mat-error>
                     </mat-form-field>
 

@@ -13,8 +13,17 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
 
-
+export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
+  align: "left",
+  allowNegative: true,
+  decimal: ".",
+  precision: 2,
+  prefix: "₹ ",
+  suffix: "",
+  thousands: ","
+};
 
 
 @Component({
@@ -34,9 +43,14 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatSortModule,
     MatPaginatorModule,
     FormsModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    CurrencyMaskModule 
   ],
-  providers: [MatSortModule]
+  providers: [
+    MatSortModule,
+    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
+  ]
+
 })
 
 
