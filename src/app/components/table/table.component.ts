@@ -12,6 +12,7 @@ import { UserDataService } from 'src/app/services/user-data.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 
@@ -32,7 +33,8 @@ import { MatInputModule } from '@angular/material/input';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    FormsModule
+    FormsModule,
+    MatDatepickerModule
   ],
   providers: [MatSortModule]
 })
@@ -62,6 +64,9 @@ export class TableComponent implements OnInit, AfterViewInit {
   formVisible: boolean = false;
   changeSymbol: boolean = true;
   editingRowId: string = '';
+  dateFormCtrl = new FormControl(new Date());
+  maxDate = new Date();
+  minDate = new Date();
 
   toppings = new FormControl('');
 
@@ -84,9 +89,10 @@ export class TableComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
   ) {
 
-    this.editForm = new FormGroup({
-      dob: new FormControl()
-  });
+    this.maxDate = new Date(); 
+    this.minDate = new Date(); 
+    this.minDate.setFullYear(this.minDate.getFullYear() - 100);
+
 
     this.route.queryParams.subscribe(val => {
       this.docId = val['id'];
@@ -95,7 +101,6 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.post = post;
 
           this.employeeForm = fb.group({
-            id: [this.post.id],
             firstName: [this.post.firstName, Validators.required],
             lastName: [this.post.lastName, Validators.required],
             email: [this.post.email, [Validators.required, Validators.email]],
@@ -111,7 +116,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
       else {
         this.employeeForm = fb.group({
-          id: [''],
           firstName: ['', Validators.required],
           lastName: ['', Validators.required],
           email: ['', [Validators.required, Validators.email]],
@@ -123,18 +127,6 @@ export class TableComponent implements OnInit, AfterViewInit {
           profile: ['']
         })
       }
-      this.employeeForm = this.fb.group({
-          id: [''],
-          firstName: ['', Validators.required],
-          lastName: ['', Validators.required],
-          email: ['', [Validators.required, Validators.email]],
-          phone: ['', Validators.required],
-          gender: ['', Validators.required],
-          language: ['', Validators.required],
-          dob: ['', Validators.required],
-          salary: ['', Validators.required],
-          profile: ['']
-        })
     })
 
   }
@@ -185,7 +177,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     const employeeData: UserData = {
-      id: this.employeeForm.value.id,
       firstName: this.employeeForm.value.firstName,
       lastName: this.employeeForm.value.lastName,
       email: this.employeeForm.value.email,
@@ -196,7 +187,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       salary: this.employeeForm.value.salary,
       profile: ''
     }
-    this.userService.uploadImage(this.selectedImage, employeeData);
+    this.userService.uploadImage(this.selectedImage, employeeData, this.changeSymbol, this.docId);
     this.imgSrc = './assets/placeholder-img.png';
 
   
@@ -258,18 +249,19 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   loadEditingRowData(id: any) {
     this.userService.loadOneData(id).subscribe((data: any) => {
-      this.editingRowData = data;      
+      this.editingRowData = data;   
     });
   }
 
   onEdit(id: any) {
     this.changeSymbol = false;
     this.editingRowId = id;
+    
     this.loadEditingRowData(id);
   }
 
   afterEdit() {
-    this.userService.editData(this.editingRowId, this.editingRowData);
+    this.userService.uploadImage(this.selectedImage, this.editingRowData, this.changeSymbol, this.editingRowId)
     this.editingRowId = '';
     this.changeSymbol = true;
   }

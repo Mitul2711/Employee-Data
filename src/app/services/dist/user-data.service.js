@@ -17,14 +17,19 @@ var UserDataService = /** @class */ (function () {
     }
     UserDataService.prototype.ngOnInit = function () {
     };
-    UserDataService.prototype.uploadImage = function (selectedImage, employeeData) {
+    UserDataService.prototype.uploadImage = function (selectedImage, employeeData, changeSymbol, id) {
         var _this = this;
         var filePath = "profile/" + Date.now();
-        this.storage.upload(filePath, selectedImage).then(function (docRef) {
+        this.storage.upload(filePath, selectedImage).then(function (uploadTaskSnapshot) {
             console.log("Image Upload");
-            _this.storage.ref(filePath).getDownloadURL().subscribe(function (url) {
+            uploadTaskSnapshot.ref.getDownloadURL().then(function (url) {
                 employeeData.profile = url;
-                _this.uploadData(employeeData);
+                if (!changeSymbol) {
+                    _this.editData(id, employeeData);
+                }
+                else {
+                    _this.uploadData(employeeData);
+                }
             });
         });
     };

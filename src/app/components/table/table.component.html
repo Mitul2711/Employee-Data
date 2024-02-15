@@ -10,7 +10,7 @@
 
 
     <div class="mat-elevation-z8">
-        
+
         <table mat-table [dataSource]="dataSource" matSort>
 
             <ng-container matColumnDef="id">
@@ -23,7 +23,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 80px;"> FirstName </th>
                 <td mat-cell *matCellDef="let row" style="width: 80px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input type="text" class="underline-input" [(ngModel)]="row.data.firstName"
+                        <input type="text" class="underline-input" [(ngModel)]="editingRowData.firstName"
                             style="width: 80px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
@@ -38,7 +38,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 100px;"> LastName </th>
                 <td mat-cell *matCellDef="let row" style="width: 100px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input type="text" class="underline-input" [(ngModel)]="row.data.lastName"
+                        <input type="text" class="underline-input" [(ngModel)]="editingRowData.lastName"
                             style="width: 100px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
@@ -52,7 +52,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 130px;"> Email </th>
                 <td mat-cell *matCellDef="let row" style="width: 130px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input type="email" class="underline-input" [(ngModel)]="row.data.email" style="width: 130px;">
+                        <input type="email" class="underline-input" [(ngModel)]="editingRowData.email" style="width: 130px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.email }}
@@ -64,7 +64,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 110px;"> Phone </th>
                 <td mat-cell *matCellDef="let row" style="width: 110px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input type="number" class="underline-input" [(ngModel)]="row.data.phone" style="width: 110px;">
+                        <input type="number" class="underline-input" [(ngModel)]="editingRowData.phone" style="width: 110px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.phone }}
@@ -76,7 +76,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 60px;"> Gender </th>
                 <td mat-cell *matCellDef="let row" style="width: 60px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <mat-radio-group>
+                        <mat-radio-group [(ngModel)]="editingRowData.gender">
                             <mat-radio-button class="example-margin" value="male">Male</mat-radio-button>
                             <mat-radio-button class="example-margin" value="female">Female</mat-radio-button>
                         </mat-radio-group>
@@ -91,8 +91,9 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 150px;"> Language </th>
                 <td mat-cell *matCellDef="let row" style="width: 150px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <mat-select [(ngModel)]="row.data.language" multiple
-                            (selectionChange)="onSelectionChange($event)" class="select-box" style="width: 150px;">
+                        <mat-select [(ngModel)]="editingRowData.language" multiple
+                            (selectionChange)="onSelectionChange($event)" class="select-box" style="width: 150px;" 
+                            [(ngModel)]="row.data.language">
                             <mat-option *ngFor="let language of languageList" [value]="language">{{ language
                                 }}</mat-option>
                         </mat-select>
@@ -108,10 +109,12 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 120px;"> Dob </th>
                 <td mat-cell *matCellDef="let row" style="width: 120px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input matInput [matDatepicker]="datepicker" [ngModel]="row.data.dob" name="dob">
+                        <input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" 
+                        [max]="maxDate" [min]="minDate" [(ngModel)]="editingRowData.dob" 
+                        placeholder="Enter your BirthDay.." readonly> 
                         <mat-hint>MM/DD/YYYY</mat-hint>
-                        <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-                        <mat-datepicker #datepicker></mat-datepicker>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.dob.toDate() | date }}
@@ -123,7 +126,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 60px;"> Salary </th>
                 <td mat-cell *matCellDef="let row" style="width: 60px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input type="text" class="underline-input" [(ngModel)]="row.data.salary" style="width: 60px;">
+                        <input type="text" class="underline-input" [(ngModel)]="editingRowData.salary" style="width: 60px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.salary }}
@@ -138,7 +141,7 @@
                         <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)"
                             style="width: 200px;">
                             <p>Drag & drop an image file here</p>
-                            <img [src]="imageUrl" height="120px" width="180px">
+                            <img [src]="imageUrl" height="120px" width="180px" [(ngModel)]="editingRowData.profile">
                             <div class="image-input-container">
                                 <input type="file" (change)="onFileSelected($event)" accept="image/*" />
                             </div>

@@ -18,6 +18,7 @@ var core_2 = require("@angular/material/core");
 var checkbox_1 = require("@angular/material/checkbox");
 var table_1 = require("@angular/material/table");
 var input_1 = require("@angular/material/input");
+var datepicker_1 = require("@angular/material/datepicker");
 var TableComponent = /** @class */ (function () {
     function TableComponent(fb, userService, route) {
         var _this = this;
@@ -40,21 +41,23 @@ var TableComponent = /** @class */ (function () {
         this.formVisible = false;
         this.changeSymbol = true;
         this.editingRowId = '';
+        this.dateFormCtrl = new forms_1.FormControl(new Date());
+        this.maxDate = new Date();
+        this.minDate = new Date();
         this.toppings = new forms_1.FormControl('');
         this.languageList = ['English', 'Hindi', 'Gujarati', 'French', 'German'];
         this.imageUrl = './assets/placeholder-img.png';
         this.selectedLanguages = [];
         this.imgSrc = './assets/placeholder-img.png';
-        this.editForm = new forms_1.FormGroup({
-            dob: new forms_1.FormControl()
-        });
+        this.maxDate = new Date();
+        this.minDate = new Date();
+        this.minDate.setFullYear(this.minDate.getFullYear() - 100);
         this.route.queryParams.subscribe(function (val) {
             _this.docId = val['id'];
             if (_this.docId) {
                 _this.userService.loadOneData(_this.docId).subscribe(function (post) {
                     _this.post = post;
                     _this.employeeForm = fb.group({
-                        id: [_this.post.id],
                         firstName: [_this.post.firstName, forms_1.Validators.required],
                         lastName: [_this.post.lastName, forms_1.Validators.required],
                         email: [_this.post.email, [forms_1.Validators.required, forms_1.Validators.email]],
@@ -69,7 +72,6 @@ var TableComponent = /** @class */ (function () {
             }
             else {
                 _this.employeeForm = fb.group({
-                    id: [''],
                     firstName: ['', forms_1.Validators.required],
                     lastName: ['', forms_1.Validators.required],
                     email: ['', [forms_1.Validators.required, forms_1.Validators.email]],
@@ -81,18 +83,6 @@ var TableComponent = /** @class */ (function () {
                     profile: ['']
                 });
             }
-            _this.employeeForm = _this.fb.group({
-                id: [''],
-                firstName: ['', forms_1.Validators.required],
-                lastName: ['', forms_1.Validators.required],
-                email: ['', [forms_1.Validators.required, forms_1.Validators.email]],
-                phone: ['', forms_1.Validators.required],
-                gender: ['', forms_1.Validators.required],
-                language: ['', forms_1.Validators.required],
-                dob: ['', forms_1.Validators.required],
-                salary: ['', forms_1.Validators.required],
-                profile: ['']
-            });
         });
     }
     TableComponent.prototype.ngAfterViewInit = function () {
@@ -130,7 +120,6 @@ var TableComponent = /** @class */ (function () {
     };
     TableComponent.prototype.onSubmit = function () {
         var employeeData = {
-            id: this.employeeForm.value.id,
             firstName: this.employeeForm.value.firstName,
             lastName: this.employeeForm.value.lastName,
             email: this.employeeForm.value.email,
@@ -141,7 +130,7 @@ var TableComponent = /** @class */ (function () {
             salary: this.employeeForm.value.salary,
             profile: ''
         };
-        this.userService.uploadImage(this.selectedImage, employeeData);
+        this.userService.uploadImage(this.selectedImage, employeeData, this.changeSymbol, this.docId);
         this.imgSrc = './assets/placeholder-img.png';
     };
     TableComponent.prototype.deleteData = function (profile, docId) {
@@ -203,7 +192,7 @@ var TableComponent = /** @class */ (function () {
         this.loadEditingRowData(id);
     };
     TableComponent.prototype.afterEdit = function () {
-        this.userService.editData(this.editingRowId, this.editingRowData);
+        this.userService.uploadImage(this.selectedImage, this.editingRowData, this.changeSymbol, this.editingRowId);
         this.editingRowId = '';
         this.changeSymbol = true;
     };
@@ -230,7 +219,8 @@ var TableComponent = /** @class */ (function () {
                 table_1.MatTableModule,
                 sort_1.MatSortModule,
                 paginator_1.MatPaginatorModule,
-                forms_1.FormsModule
+                forms_1.FormsModule,
+                datepicker_1.MatDatepickerModule
             ],
             providers: [sort_1.MatSortModule]
         })

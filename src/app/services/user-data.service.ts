@@ -18,18 +18,24 @@ export class UserDataService implements OnInit {
     
   }
 
-  uploadImage(selectedImage: any,employeeData: any) {
+  uploadImage(selectedImage: any, employeeData: any, changeSymbol: any, id: any) {
     const filePath = `profile/${Date.now()}`;
-
-    this.storage.upload(filePath, selectedImage).then(docRef => {
+  
+    this.storage.upload(filePath, selectedImage).then(uploadTaskSnapshot => {
       console.log("Image Upload");
-      
-      this.storage.ref(filePath).getDownloadURL().subscribe(url => {
+  
+      uploadTaskSnapshot.ref.getDownloadURL().then(url => {
         employeeData.profile = url;
-        this.uploadData(employeeData);
+  
+        if (!changeSymbol) {
+          this.editData(id, employeeData);
+        } else {
+          this.uploadData(employeeData);
+        }
       })
     })
   }
+  
 
   uploadData(employeeData: any) {
     this.afs.collection('employee').add(employeeData).then(docRef => {
@@ -77,7 +83,7 @@ export class UserDataService implements OnInit {
   }
 
   loadOneData(id: any) {
-    return this.afs.collection('employee').doc(id).valueChanges();
+    return this.afs.collection('employee').doc(id).valueChanges()
   }
 
 }
