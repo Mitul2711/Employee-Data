@@ -77,10 +77,7 @@ export class UserDataService implements OnInit {
   }
 
   loadOneData(id: any) {
-    return this.afs.collection('employee').doc(id).valueChanges(() => {
-      console.log('loadOneData');
-      
-    })
+    return this.afs.collection('employee').doc(id).valueChanges();
   }
 
 }

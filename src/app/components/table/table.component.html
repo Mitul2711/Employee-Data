@@ -10,8 +10,8 @@
 
 
     <div class="mat-elevation-z8">
+        
         <table mat-table [dataSource]="dataSource" matSort>
-
 
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40px;"> ID </th>
@@ -76,7 +76,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 60px;"> Gender </th>
                 <td mat-cell *matCellDef="let row" style="width: 60px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <mat-radio-group formControlName="gender">
+                        <mat-radio-group>
                             <mat-radio-button class="example-margin" value="male">Male</mat-radio-button>
                             <mat-radio-button class="example-margin" value="female">Female</mat-radio-button>
                         </mat-radio-group>
@@ -108,8 +108,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 120px;"> Dob </th>
                 <td mat-cell *matCellDef="let row" style="width: 120px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input matInput [matDatepicker]="datepicker" formControlName="dob" style="width: 140px;"
-                            [(ngModel)]="row.data.dob">
+                        <input matInput [matDatepicker]="datepicker" [ngModel]="row.data.dob" name="dob">
                         <mat-hint>MM/DD/YYYY</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
                         <mat-datepicker #datepicker></mat-datepicker>
@@ -136,12 +135,12 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 200px;"> Profile </th>
                 <td mat-cell *matCellDef="let row" style="width: 200px;">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+                        <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)"
+                            style="width: 200px;">
                             <p>Drag & drop an image file here</p>
                             <img [src]="imageUrl" height="120px" width="180px">
                             <div class="image-input-container">
-                                <input type="file" (change)="onFileSelected($event)" accept="image/*"
-                                    formControlName="profile" />
+                                <input type="file" (change)="onFileSelected($event)" accept="image/*" />
                             </div>
                         </div>
                     </ng-container>
@@ -154,7 +153,13 @@
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 50px;"> Action </th>
                 <td mat-cell *matCellDef="let row" style="width: 50px;">
-                    <a (click)="onEdit(row.id)"><i class="fa fa-solid fa-file" style="color: #0058f0;"></i></a>
+
+                    <a (click)="onEdit(row.id)" *ngIf="changeSymbol"><i class="fa fa-solid fa-file"
+                            style="color: #0058f0;"></i></a>
+
+                    <a *ngIf="!changeSymbol" (click)="afterEdit()"><i class="fa fa-solid fa-check"
+                            style="color: #04ff00;"></i></a>
+
                     <a (click)="deleteData(row.data.profile, row.id)"><i class="fa fa-solid fa-trash"
                             style="color: #fa0000;"></i></a>
                 </td>

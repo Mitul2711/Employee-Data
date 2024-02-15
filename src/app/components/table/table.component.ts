@@ -55,11 +55,12 @@ export class TableComponent implements OnInit, AfterViewInit {
   ];
 
   employeeForm: FormGroup;
+  editForm: FormGroup;
 
   dataSource: MatTableDataSource<any>;
   selectedImage: any;
   formVisible: boolean = false;
-  editData: boolean = true;
+  changeSymbol: boolean = true;
   editingRowId: string = '';
 
   toppings = new FormControl('');
@@ -69,13 +70,13 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  imageUrl: string | ArrayBuffer | null = null;
+  imageUrl: string = './assets/placeholder-img.png';
   selectedLanguages: string[] = [];
   imgSrc: any = './assets/placeholder-img.png';
   userDataArray: any;
-  dataArray: any[] = [];
   docId: any;
   post: any;
+  editingRowData: any;
 
   constructor(
     private fb: FormBuilder,
@@ -83,8 +84,9 @@ export class TableComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
   ) {
 
-   
-
+    this.editForm = new FormGroup({
+      dob: new FormControl()
+  });
 
     this.route.queryParams.subscribe(val => {
       this.docId = val['id'];
@@ -92,8 +94,8 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.userService.loadOneData(this.docId).subscribe(post => {
           this.post = post;
 
-          this.employeeForm = this.fb.group({
-            id: [],
+          this.employeeForm = fb.group({
+            id: [this.post.id],
             firstName: [this.post.firstName, Validators.required],
             lastName: [this.post.lastName, Validators.required],
             email: [this.post.email, [Validators.required, Validators.email]],
@@ -108,8 +110,8 @@ export class TableComponent implements OnInit, AfterViewInit {
         })
       }
       else {
-        this.employeeForm = this.fb.group({
-          id: [],
+        this.employeeForm = fb.group({
+          id: [''],
           firstName: ['', Validators.required],
           lastName: ['', Validators.required],
           email: ['', [Validators.required, Validators.email]],
@@ -121,6 +123,18 @@ export class TableComponent implements OnInit, AfterViewInit {
           profile: ['']
         })
       }
+      this.employeeForm = this.fb.group({
+          id: [''],
+          firstName: ['', Validators.required],
+          lastName: ['', Validators.required],
+          email: ['', [Validators.required, Validators.email]],
+          phone: ['', Validators.required],
+          gender: ['', Validators.required],
+          language: ['', Validators.required],
+          dob: ['', Validators.required],
+          salary: ['', Validators.required],
+          profile: ['']
+        })
     })
 
   }
@@ -141,18 +155,11 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   displayData() {
     this.userService.loadData().subscribe(val => {
-      this.dataArray = val;
-      
       this.userDataArray = val;
-      console.log(this.dataArray);
-
-
       this.dataSource = new MatTableDataSource
         (this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data })));
 
       this.dataSource.paginator = this.paginator;
-      // console.log(this.dataSource.data);
-
     })
   }
 
@@ -190,7 +197,9 @@ export class TableComponent implements OnInit, AfterViewInit {
       profile: ''
     }
     this.userService.uploadImage(this.selectedImage, employeeData);
+    this.imgSrc = './assets/placeholder-img.png';
 
+  
   }
 
   deleteData(profile: any, docId: any) {
@@ -226,7 +235,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.selectedImage = file;
     }else {
       
-      this.imgSrc = './assets/placeholder-img.png';
+      this.imageUrl = './assets/placeholder-img.png';
       
       this.selectedImage = null;
     }
@@ -247,9 +256,22 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   // edit Data
 
+  loadEditingRowData(id: any) {
+    this.userService.loadOneData(id).subscribe((data: any) => {
+      this.editingRowData = data;      
+    });
+  }
+
   onEdit(id: any) {
-    this.editData = false;
-    this.editingRowId = id
+    this.changeSymbol = false;
+    this.editingRowId = id;
+    this.loadEditingRowData(id);
+  }
+
+  afterEdit() {
+    this.userService.editData(this.editingRowId, this.editingRowData);
+    this.editingRowId = '';
+    this.changeSymbol = true;
   }
 
 }

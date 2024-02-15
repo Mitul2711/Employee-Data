@@ -38,21 +38,23 @@ var TableComponent = /** @class */ (function () {
             'action'
         ];
         this.formVisible = false;
-        this.editData = true;
+        this.changeSymbol = true;
         this.editingRowId = '';
         this.toppings = new forms_1.FormControl('');
         this.languageList = ['English', 'Hindi', 'Gujarati', 'French', 'German'];
-        this.imageUrl = null;
+        this.imageUrl = './assets/placeholder-img.png';
         this.selectedLanguages = [];
         this.imgSrc = './assets/placeholder-img.png';
-        this.dataArray = [];
+        this.editForm = new forms_1.FormGroup({
+            dob: new forms_1.FormControl()
+        });
         this.route.queryParams.subscribe(function (val) {
             _this.docId = val['id'];
             if (_this.docId) {
                 _this.userService.loadOneData(_this.docId).subscribe(function (post) {
                     _this.post = post;
-                    _this.employeeForm = _this.fb.group({
-                        id: [],
+                    _this.employeeForm = fb.group({
+                        id: [_this.post.id],
                         firstName: [_this.post.firstName, forms_1.Validators.required],
                         lastName: [_this.post.lastName, forms_1.Validators.required],
                         email: [_this.post.email, [forms_1.Validators.required, forms_1.Validators.email]],
@@ -66,8 +68,8 @@ var TableComponent = /** @class */ (function () {
                 });
             }
             else {
-                _this.employeeForm = _this.fb.group({
-                    id: [],
+                _this.employeeForm = fb.group({
+                    id: [''],
                     firstName: ['', forms_1.Validators.required],
                     lastName: ['', forms_1.Validators.required],
                     email: ['', [forms_1.Validators.required, forms_1.Validators.email]],
@@ -79,6 +81,18 @@ var TableComponent = /** @class */ (function () {
                     profile: ['']
                 });
             }
+            _this.employeeForm = _this.fb.group({
+                id: [''],
+                firstName: ['', forms_1.Validators.required],
+                lastName: ['', forms_1.Validators.required],
+                email: ['', [forms_1.Validators.required, forms_1.Validators.email]],
+                phone: ['', forms_1.Validators.required],
+                gender: ['', forms_1.Validators.required],
+                language: ['', forms_1.Validators.required],
+                dob: ['', forms_1.Validators.required],
+                salary: ['', forms_1.Validators.required],
+                profile: ['']
+            });
         });
     }
     TableComponent.prototype.ngAfterViewInit = function () {
@@ -95,12 +109,9 @@ var TableComponent = /** @class */ (function () {
     TableComponent.prototype.displayData = function () {
         var _this = this;
         this.userService.loadData().subscribe(function (val) {
-            _this.dataArray = val;
             _this.userDataArray = val;
-            console.log(_this.dataArray);
             _this.dataSource = new table_1.MatTableDataSource(_this.userDataArray.map(function (item) { return ({ id: item.id, data: item.data }); }));
             _this.dataSource.paginator = _this.paginator;
-            // console.log(this.dataSource.data);
         });
     };
     TableComponent.prototype.onSelectionChange = function (event) {
@@ -131,6 +142,7 @@ var TableComponent = /** @class */ (function () {
             profile: ''
         };
         this.userService.uploadImage(this.selectedImage, employeeData);
+        this.imgSrc = './assets/placeholder-img.png';
     };
     TableComponent.prototype.deleteData = function (profile, docId) {
         this.userService.deleteImage(profile, docId);
@@ -163,7 +175,7 @@ var TableComponent = /** @class */ (function () {
             this.selectedImage = file;
         }
         else {
-            this.imgSrc = './assets/placeholder-img.png';
+            this.imageUrl = './assets/placeholder-img.png';
             this.selectedImage = null;
         }
     };
@@ -179,9 +191,21 @@ var TableComponent = /** @class */ (function () {
         event.preventDefault();
     };
     // edit Data
+    TableComponent.prototype.loadEditingRowData = function (id) {
+        var _this = this;
+        this.userService.loadOneData(id).subscribe(function (data) {
+            _this.editingRowData = data;
+        });
+    };
     TableComponent.prototype.onEdit = function (id) {
-        this.editData = false;
+        this.changeSymbol = false;
         this.editingRowId = id;
+        this.loadEditingRowData(id);
+    };
+    TableComponent.prototype.afterEdit = function () {
+        this.userService.editData(this.editingRowId, this.editingRowData);
+        this.editingRowId = '';
+        this.changeSymbol = true;
     };
     __decorate([
         core_1.ViewChild(paginator_1.MatPaginator)

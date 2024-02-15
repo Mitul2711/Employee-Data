@@ -63,9 +63,7 @@ var UserDataService = /** @class */ (function () {
         });
     };
     UserDataService.prototype.loadOneData = function (id) {
-        return this.afs.collection('employee').doc(id).valueChanges(function () {
-            console.log('loadOneData');
-        });
+        return this.afs.collection('employee').doc(id).valueChanges();
     };
     UserDataService = __decorate([
         core_1.Injectable({
