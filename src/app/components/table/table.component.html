@@ -11,17 +11,17 @@
 
     <div class="mat-elevation-z8">
 
-        <table mat-table [dataSource]="dataSource">
+        <table mat-table [dataSource]="dataSource" matSort>
 
             <ng-container matColumnDef="srNo">
-                <th mat-header-cell *matHeaderCellDef style="width: 40px;"> srNo </th>
-                <td mat-cell *matCellDef="let row" style="width: 40px;"> {{row.data.srNo}} </td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> srNo </th>
+                <td mat-cell *matCellDef="let row"> {{row.data.srNo}} </td>
             </ng-container>
 
 
             <ng-container matColumnDef="firstName">
-                <th mat-header-cell *matHeaderCellDef style="width: 80px;"> FirstName </th>
-                <td mat-cell *matCellDef="let row" style="width: 80px;">
+                <th mat-header-cell *matHeaderCellDef> FirstName </th>
+                <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="text" class="underline-input" [(ngModel)]="editingRowData.firstName"
                             style="width: 80px;">
@@ -35,8 +35,8 @@
 
 
             <ng-container matColumnDef="lastName">
-                <th mat-header-cell *matHeaderCellDef style="width: 100px;"> LastName </th>
-                <td mat-cell *matCellDef="let row" style="width: 100px;">
+                <th mat-header-cell *matHeaderCellDef> LastName </th>
+                <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="text" class="underline-input" [(ngModel)]="editingRowData.lastName"
                             style="width: 100px;">
@@ -49,8 +49,8 @@
 
 
             <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef style="width: 130px;"> Email </th>
-                <td mat-cell *matCellDef="let row" style="width: 130px;">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="email" class="underline-input" [(ngModel)]="editingRowData.email" style="width: 130px;">
                     </ng-container>
@@ -61,8 +61,8 @@
             </ng-container>
 
             <ng-container matColumnDef="phone">
-                <th mat-header-cell *matHeaderCellDef style="width: 110px;"> Phone </th>
-                <td mat-cell *matCellDef="let row" style="width: 110px;">
+                <th mat-header-cell *matHeaderCellDef> Phone </th>
+                <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="number" class="underline-input" [(ngModel)]="editingRowData.phone" style="width: 110px;">
                     </ng-container>
@@ -73,8 +73,8 @@
             </ng-container>
 
             <ng-container matColumnDef="gender">
-                <th mat-header-cell *matHeaderCellDef style="width: 60px;"> Gender </th>
-                <td mat-cell *matCellDef="let row" style="width: 60px;">
+                <th mat-header-cell *matHeaderCellDef> Gender </th>
+                <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <mat-radio-group [(ngModel)]="editingRowData.gender">
                             <mat-radio-button class="example-margin" value="male">Male</mat-radio-button>
@@ -88,8 +88,8 @@
             </ng-container>
 
             <ng-container matColumnDef="language">
-                <th mat-header-cell *matHeaderCellDef style="width: 150px;"> Language </th>
-                <td mat-cell *matCellDef="let row" style="width: 150px;">
+                <th mat-header-cell *matHeaderCellDef> Language </th>
+                <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <mat-select [(ngModel)]="editingRowData.language" multiple
                             (selectionChange)="onSelectionChange($event)" class="select-box" style="width: 150px;" 
@@ -106,8 +106,8 @@
 
 
             <ng-container matColumnDef="dob">
-                <th mat-header-cell *matHeaderCellDef style="width: 120px;"> Dob </th>
-                <td mat-cell *matCellDef="let row" style="width: 120px;">
+                <th mat-header-cell *matHeaderCellDef> Dob </th>
+                <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" 
                         [max]="maxDate" [min]="minDate" [(ngModel)]="editingRowData.dob" 
@@ -123,10 +123,10 @@
             </ng-container>
 
             <ng-container matColumnDef="salary">
-                <th mat-header-cell *matHeaderCellDef style="width: 60px;"> Salary </th>
-                <td mat-cell *matCellDef="let row" style="width: 60px;">
+                <th mat-header-cell *matHeaderCellDef> Salary </th>
+                <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input currencyMask  type="text" class="underline-input" [(ngModel)]="editingRowData.salary" style="width: 60px;">
+                        <input currencyMask  type="text" class="underline-input" [(ngModel)]="editingRowData.salary">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.salary | currency : 'INR' }}
@@ -135,8 +135,8 @@
             </ng-container>
 
             <ng-container matColumnDef="profile">
-                <th mat-header-cell *matHeaderCellDef style="width: 200px;"> Profile </th>
-                <td mat-cell *matCellDef="let row" style="width: 200px;">
+                <th mat-header-cell *matHeaderCellDef> Profile </th>
+                <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)"
                             style="width: 200px;">
@@ -154,8 +154,8 @@
             </ng-container>
 
             <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef style="width: 50px;"> Action </th>
-                <td mat-cell *matCellDef="let row" style="width: 50px;">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let row">
 
                     <a (click)="onEdit(row.id)" *ngIf="changeSymbol"><i class="fa fa-solid fa-file"
                             style="color: #0058f0;"></i></a>

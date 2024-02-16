@@ -50,8 +50,8 @@ export class UserDataService implements OnInit {
   uploadData(employeeData: any) {
     this.afs.collection('employee').get().toPromise().then(querySnapshot => {
       if (querySnapshot) {
-        const srNo = querySnapshot.size + 1; // Incrementing the total count by 1
-        employeeData.srNo = srNo; // Setting the srNo property in the employeeData object
+        const srNo = querySnapshot.size + 1; 
+        employeeData.srNo = srNo; 
         this.afs.collection('employee').add(employeeData).then(docRef => {
           console.log("Data Uploaded");
         });
@@ -85,7 +85,6 @@ export class UserDataService implements OnInit {
   deleteData(id: any) {
     this.afs.collection('employee').doc(id).delete().then(() => {
       console.log('data deleted');
-
     })
   }
 

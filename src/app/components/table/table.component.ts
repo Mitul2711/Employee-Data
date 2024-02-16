@@ -14,7 +14,8 @@ import { ActivatedRoute } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
-import { doc } from 'firebase/firestore';
+import { Sort } from '@angular/material/sort';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -46,7 +47,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     MatPaginatorModule,
     FormsModule,
     MatDatepickerModule,
-    CurrencyMaskModule,
+    CurrencyMaskModule
   ],
   providers: [
     MatSortModule,
@@ -84,6 +85,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   maxDate = new Date();
   minDate = new Date();
 
+
   toppings = new FormControl('');
 
   languageList: string[] = ['English', 'Hindi', 'Gujarati', 'French', 'German'];
@@ -103,6 +105,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private userService: UserDataService,
     private route: ActivatedRoute,
+    private afs: AngularFirestore
   ) {
 
     this.maxDate = new Date();
@@ -147,40 +150,43 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
 
-    if(filterValue == "") {
+    if (filterValue == "") {
       this.displayData();
     } else {
       this.dataSource.data = this.dataSource.data.filter((item: any) => {
         return item.data.firstName.toLowerCase().includes(filterValue) ||
-               item.data.lastName.toLowerCase().includes(filterValue);
-      }); 
-    }   
+          item.data.lastName.toLowerCase().includes(filterValue);
+      });
+    }
   }
 
   ngOnInit(): void {
     this.displayData();
   }
 
+
   displayData() {
     this.userService.loadData().subscribe(val => {
       this.userDataArray = val;
       this.dataSource = new MatTableDataSource
         (this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data })));
-
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
       console.log(this.dataSource.data)
 
     })
   }
 
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
 
   onSelectionChange(event: any) {
     this.selectedLanguages = event.value;
@@ -215,7 +221,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       profile: ''
     }
     this.userService.uploadImage(this.selectedImage, employeeData, this.changeSymbol, this.docId);
-    
+
     this.imgSrc = './assets/placeholder-img.png';
   }
 
