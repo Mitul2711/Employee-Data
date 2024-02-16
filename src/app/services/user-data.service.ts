@@ -58,9 +58,7 @@ export class UserDataService implements OnInit {
       } else {
         console.error("No documents found in the collection");
       }
-    }).catch(error => {
-      console.error("Error getting documents: ", error);
-    });
+    })
   }
   
   
