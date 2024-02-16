@@ -47,14 +47,23 @@ export class UserDataService implements OnInit {
 
 
   }
-
-
   uploadData(employeeData: any) {
-    this.afs.collection('employee').add(employeeData).then(docRef => {
-      console.log("Data Uploaded");
-
-    })
+    this.afs.collection('employee').get().toPromise().then(querySnapshot => {
+      if (querySnapshot) {
+        const srNo = querySnapshot.size + 1; // Incrementing the total count by 1
+        employeeData.srNo = srNo; // Setting the srNo property in the employeeData object
+        this.afs.collection('employee').add(employeeData).then(docRef => {
+          console.log("Data Uploaded");
+        });
+      } else {
+        console.error("No documents found in the collection");
+      }
+    }).catch(error => {
+      console.error("Error getting documents: ", error);
+    });
   }
+  
+  
 
 
   loadData() {
@@ -85,7 +94,7 @@ export class UserDataService implements OnInit {
       this.deleteData(id);
       return
     } else {
-      this.storage.storage.ref(profile).delete().then(() => {
+      this.storage.storage.refFromURL(profile).delete().then(() => {
         this.deleteData(id);
         console.log("img deleted");
       })

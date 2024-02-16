@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
+import { doc } from 'firebase/firestore';
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -58,7 +59,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
 export class TableComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
-    'id',
+    'srNo',
     'firstName',
     'lastName',
     'email',
@@ -161,9 +162,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         return item.data.firstName.toLowerCase().includes(filterValue) ||
                item.data.lastName.toLowerCase().includes(filterValue);
       }); 
-    }
-
-        
+    }   
   }
 
   ngOnInit(): void {
@@ -204,6 +203,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     const employeeData: UserData = {
+      srNo: 0,
       firstName: this.employeeForm.value.firstName,
       lastName: this.employeeForm.value.lastName,
       email: this.employeeForm.value.email,
@@ -215,8 +215,11 @@ export class TableComponent implements OnInit, AfterViewInit {
       profile: ''
     }
     this.userService.uploadImage(this.selectedImage, employeeData, this.changeSymbol, this.docId);
+    
     this.imgSrc = './assets/placeholder-img.png';
   }
+
+
 
   deleteData(profile: any, docId: any) {
 

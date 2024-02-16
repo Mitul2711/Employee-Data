@@ -1,4 +1,5 @@
 export interface UserData {
+    srNo: number;
     // id: string;
     firstName: string;
     lastName: string;
