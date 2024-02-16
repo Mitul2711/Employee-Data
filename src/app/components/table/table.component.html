@@ -129,7 +129,7 @@
                         <input currencyMask  type="text" class="underline-input" [(ngModel)]="editingRowData.salary" style="width: 60px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.salary }}
+                        {{ row.data.salary | currency : 'INR' }}
                     </ng-container>  
                 </td>
             </ng-container>
