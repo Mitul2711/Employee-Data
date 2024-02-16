@@ -29,7 +29,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +49,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatPaginatorModule,
     MatSortModule,
     MatCardModule
-    // MatTableDataSource
+    // MatTableDataSource,
   ],
   providers: [MatSortModule],
   exports:[],

@@ -15,32 +15,44 @@ export class UserDataService implements OnInit {
   constructor(private afs: AngularFirestore, private storage: AngularFireStorage, private router: Router) { }
 
   ngOnInit(): void {
-    
+
   }
 
   uploadImage(selectedImage: any, employeeData: any, changeSymbol: any, id: any) {
-    const filePath = `profile/${Date.now()}`;
-  
-    this.storage.upload(filePath, selectedImage).then(uploadTaskSnapshot => {
-      console.log("Image Upload");
-  
-      uploadTaskSnapshot.ref.getDownloadURL().then(url => {
-        employeeData.profile = url;
-  
-        if (!changeSymbol) {
-          this.editData(id, employeeData);
-        } else {
-          this.uploadData(employeeData);
-        }
+
+    if (!selectedImage) {
+      employeeData.profile = './assets/placeholder-img.png';
+      if (!changeSymbol) {
+        this.editData(id, employeeData);
+      } else {
+        this.uploadData(employeeData);
+      }
+    } else {
+      const filePath = `profile/${Date.now()}`;
+
+      this.storage.upload(filePath, selectedImage).then(uploadTaskSnapshot => {
+        console.log("Image Upload");
+
+        uploadTaskSnapshot.ref.getDownloadURL().then(url => {
+          employeeData.profile = url;
+
+          if (!changeSymbol) {
+            this.editData(id, employeeData);
+          } else {
+            this.uploadData(employeeData);
+          }
+        })
       })
-    })
+    }
+
+
   }
-  
+
 
   uploadData(employeeData: any) {
     this.afs.collection('employee').add(employeeData).then(docRef => {
       console.log("Data Uploaded");
-      
+
     })
   }
 
@@ -51,7 +63,7 @@ export class UserDataService implements OnInit {
         return actions.map(a => {
           const data = a.payload.doc.data();
           const id = a.payload.doc.id;
-          return { id, data};
+          return { id, data };
         })
       })
     )
@@ -64,16 +76,20 @@ export class UserDataService implements OnInit {
   deleteData(id: any) {
     this.afs.collection('employee').doc(id).delete().then(() => {
       console.log('data deleted');
-      
+
     })
   }
 
   deleteImage(profile: any, id: any) {
-    this.storage.storage.refFromURL(profile).delete().then(() => {
+    if (profile.startsWith('./assets/placeholder-img.png')) {
       this.deleteData(id);
-      console.log("img deleted");
-      
-    })
+      return
+    } else {
+      this.storage.storage.ref(profile).delete().then(() => {
+        this.deleteData(id);
+        console.log("img deleted");
+      })
+    }
   }
 
   editData(id: any, employeeData: any) {

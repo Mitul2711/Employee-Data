@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Directive, ElementRef, HostListener, NgModule, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MaterialModule } from '../../module/material.module';
@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
+
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -44,7 +45,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     MatPaginatorModule,
     FormsModule,
     MatDatepickerModule,
-    CurrencyMaskModule 
+    CurrencyMaskModule,
   ],
   providers: [
     MatSortModule,
@@ -103,14 +104,14 @@ export class TableComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
   ) {
 
-    this.maxDate = new Date(); 
-    this.minDate = new Date(); 
+    this.maxDate = new Date();
+    this.minDate = new Date();
     this.minDate.setFullYear(this.minDate.getFullYear() - 100);
 
 
     this.route.queryParams.subscribe(val => {
       this.docId = val['id'];
-      if(this.docId) {
+      if (this.docId) {
         this.userService.loadOneData(this.docId).subscribe(post => {
           this.post = post;
 
@@ -151,12 +152,22 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+
+    if(filterValue == "") {
+      this.displayData();
+    } else {
+      this.dataSource.data = this.dataSource.data.filter((item: any) => {
+        return item.data.firstName.toLowerCase().includes(filterValue) ||
+               item.data.lastName.toLowerCase().includes(filterValue);
+      }); 
+    }
+
+        
   }
 
   ngOnInit(): void {
-    this.displayData();   
+    this.displayData();
   }
 
   displayData() {
@@ -166,6 +177,8 @@ export class TableComponent implements OnInit, AfterViewInit {
         (this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data })));
 
       this.dataSource.paginator = this.paginator;
+      console.log(this.dataSource.data)
+
     })
   }
 
@@ -203,12 +216,13 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
     this.userService.uploadImage(this.selectedImage, employeeData, this.changeSymbol, this.docId);
     this.imgSrc = './assets/placeholder-img.png';
-
-  
   }
 
   deleteData(profile: any, docId: any) {
-    this.userService.deleteImage(profile, docId);
+
+    if (confirm("want to delete this data..")) {
+      this.userService.deleteImage(profile, docId);
+    }
   }
 
 
@@ -238,10 +252,10 @@ export class TableComponent implements OnInit, AfterViewInit {
       };
       reader.readAsDataURL(file);
       this.selectedImage = file;
-    }else {
-      
+    } else {
+
       this.imageUrl = './assets/placeholder-img.png';
-      
+
       this.selectedImage = null;
     }
   }
@@ -263,14 +277,14 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   loadEditingRowData(id: any) {
     this.userService.loadOneData(id).subscribe((data: any) => {
-      this.editingRowData = data;   
+      this.editingRowData = data;
     });
   }
 
   onEdit(id: any) {
     this.changeSymbol = false;
     this.editingRowId = id;
-    
+
     this.loadEditingRowData(id);
   }
 

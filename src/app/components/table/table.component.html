@@ -130,7 +130,7 @@
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.salary }}
-                    </ng-container>
+                    </ng-container>  
                 </td>
             </ng-container>
 
@@ -141,7 +141,7 @@
                         <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)"
                             style="width: 200px;">
                             <p>Drag & drop an image file here</p>
-                            <img [src]="imageUrl" height="120px" width="180px" [(ngModel)]="editingRowData.profile">
+                            <img [src]="imageUrl" height="120px" width="180px">
                             <div class="image-input-container">
                                 <input type="file" (change)="onFileSelected($event)" accept="image/*" />
                             </div>
