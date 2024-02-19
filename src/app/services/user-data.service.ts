@@ -44,9 +44,8 @@ export class UserDataService implements OnInit {
         })
       })
     }
-
-
   }
+
   uploadData(employeeData: any) {
     this.afs.collection('employee').get().toPromise().then(querySnapshot => {
       if (querySnapshot) {
@@ -61,8 +60,6 @@ export class UserDataService implements OnInit {
     })
   }
   
-  
-
 
   loadData() {
     return this.afs.collection('employee').snapshotChanges().pipe(
@@ -80,11 +77,33 @@ export class UserDataService implements OnInit {
     return this.afs.collection('employee').doc(id).valueChanges();
   }
 
+  
   deleteData(id: any) {
-    this.afs.collection('employee').doc(id).delete().then(() => {
-      console.log('data deleted');
-    })
+    this.afs.collection('employee').doc(id).ref.get().then(doc => {
+      const deletedSrNo = (doc.data() as UserData).srNo;
+      this.afs.collection('employee', ref => ref.where('srNo', '>', deletedSrNo)).get().subscribe(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          const updatedSrNo = (doc.data() as UserData).srNo - 1;
+          this.afs.collection('employee').doc(doc.id).update({ srNo: updatedSrNo })
+            .then(() => {
+              console.log(`Updated srNo for document ${doc.id}`);
+            })
+            .catch(error => {
+              console.error('Error updating document:', error);
+            });
+        });
+      });
+      // Now delete the specified data
+      this.afs.collection('employee').doc(id).delete().then(() => {
+        console.log('Data deleted');
+      }).catch(error => {
+        console.error('Error deleting document:', error);
+      });
+    }).catch(error => {
+      console.error('Error getting document:', error);
+    });
   }
+
 
   deleteImage(profile: any, id: any) {
     if (profile.startsWith('./assets/placeholder-img.png')) {
