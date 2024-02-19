@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, Directive, ElementRef, HostListener, NgModule, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MaterialModule } from '../../module/material.module';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { UserData } from 'src/app/model/user-data';
@@ -15,7 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-
+import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -48,7 +48,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     FormsModule,
     MatDatepickerModule,
     CurrencyMaskModule,
-    
+    NgxSpinnerModule
   ],
   providers: [
     MatSortModule,
@@ -102,13 +102,15 @@ export class TableComponent implements OnInit, AfterViewInit {
   docId: any;
   post: any;
   editingRowData: any;
+  isLoading: boolean;
 
   constructor(
     private fb: FormBuilder,
     private userService: UserDataService,
     private route: ActivatedRoute,
     private _liveAnnouncer: LiveAnnouncer,
-    private el: ElementRef
+    private el: ElementRef,
+    private spinner: NgxSpinnerService
   ) {
 
     this.maxDate = new Date();
@@ -236,6 +238,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   
 
   displayData() {
+    this.isLoading = true;
+    this.spinner.show();
     this.userService.loadData().subscribe(val => {
       console.log(val);
       
@@ -245,8 +249,11 @@ export class TableComponent implements OnInit, AfterViewInit {
       );
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      // console.log(this.dataSource.data)
+
+      this.isLoading = false; // Set isLoading flag to false to hide spinner
+      this.spinner.hide();
     });
+
   }
   
   
@@ -280,6 +287,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
+
     const employeeData: UserData = {
       srNo: 0,
       firstName: this.employeeForm.value.firstName,
@@ -295,6 +303,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.userService.uploadImage(this.selectedImage, employeeData, this.changeSymbol, this.docId, this.selectedLanguagesString);
 
     this.imgSrc = './assets/placeholder-img.png';
+    
+
   }
 
 

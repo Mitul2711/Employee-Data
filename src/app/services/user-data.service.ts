@@ -4,6 +4,7 @@ import { UserData } from '../model/user-data';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,12 @@ export class UserDataService implements OnInit {
 
   userData: UserData
 
-  constructor(private afs: AngularFirestore, private storage: AngularFireStorage, private router: Router) { }
+  constructor(
+    private afs: AngularFirestore, 
+    private storage: AngularFireStorage, 
+    private router: Router,
+    private spinner: NgxSpinnerService
+    ) { }
 
   ngOnInit(): void {
 
