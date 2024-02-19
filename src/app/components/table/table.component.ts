@@ -4,7 +4,7 @@ import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MaterialModule } from '../../module/material.module';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { UserData } from 'src/app/model/user-data';
@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -46,7 +47,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     MatPaginatorModule,
     FormsModule,
     MatDatepickerModule,
-    CurrencyMaskModule
+    CurrencyMaskModule,
+    
   ],
   providers: [
     MatSortModule,
@@ -83,6 +85,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   dateFormCtrl = new FormControl(new Date());
   maxDate = new Date();
   minDate = new Date();
+  selectedLanguagesString: string = '';
 
 
   toppings = new FormControl('');
@@ -104,7 +107,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private userService: UserDataService,
     private route: ActivatedRoute,
-    private _liveAnnouncer: LiveAnnouncer
+    private _liveAnnouncer: LiveAnnouncer,
+    private el: ElementRef
   ) {
 
     this.maxDate = new Date();
@@ -112,7 +116,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.minDate.setFullYear(this.minDate.getFullYear() - 100);
 
 
-    this.route.queryParams.subscribe(val => {
+    this.route.queryParams.subscribe(val => { 
       this.docId = val['id'];
       if (this.docId) {
         this.userService.loadOneData(this.docId).subscribe(post => {
@@ -120,7 +124,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
           this.employeeForm = fb.group({
             firstName: [this.post.firstName, Validators.required],
-            lastName: [this.post.lastName, Validators.required],
+            lastName: [this.post.lastName, Validators.required,],
             email: [this.post.email, [Validators.required, Validators.email]],
             phone: [this.post.phone, Validators.required],
             gender: [this.post.gender, Validators.required],
@@ -137,7 +141,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           firstName: ['', Validators.required],
           lastName: ['', Validators.required],
           email: ['', [Validators.required, Validators.email]],
-          phone: ['', Validators.required],
+          phone: ['', Validators.required ],
           gender: ['', Validators.required],
           language: ['', Validators.required],
           dob: ['', Validators.required],
@@ -147,19 +151,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     })
 
-  }
-
-  announceSortChange(sortState: Sort) {
-    
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-      console.log('sort');
-      
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-      console.log("esort");
-      
-    }
   }
 
 
@@ -180,18 +171,89 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.displayData();
   }
 
+  
+  // @HostListener('keydown', ['$event'])
+  // onKeyDown(event: KeyboardEvent) {
+  //   const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End', '+'];
+  //   if (!allowedKeys.includes(event.key) && isNaN(Number(event.key))) {
+  //     event.preventDefault();
+  //   }
+  // }
+  
+
+  // not able to enter number
+
+  // @HostListener('input', ['$event']) onInputChange(event: { target: { value: any; }; stopPropagation: () => void; }) {
+  //   const initialValue = event.target.value;
+  //   event.target.value = initialValue.replace(/[^a-zA-Z]/g, '');
+  //   if (initialValue !== event.target.value) {
+  //     event.stopPropagation();
+  //   }
+  // }
+
+  // onKeyPress(event: KeyboardEvent) {
+  //   const inputValue = event.key;
+  //   const alphabeticRegex = /^[a-zA-Z]*$/;
+  //   if (!alphabeticRegex.test(inputValue)) {
+  //     event.preventDefault(); // Prevent the input of non-alphabetic characters
+  //   }
+  // }
+
+  announceSortChange(sortState: Sort, data: any[]) {
+    if (sortState.direction) {
+      data.sort((a: any, b: any) => {
+        if (sortState.active === 'srNo') {
+          return sortState.direction === 'asc' ? a.data.srNo - b.data.srNo : b.data.srNo - a.data.srNo;
+        } else if (sortState.active === 'firstName') {
+          return sortState.direction === 'asc' ? a.data.firstName.localeCompare(b.data.firstName) : b.data.firstName.localeCompare(a.data.firstName);
+        } else if (sortState.active === 'lastName') {
+          return sortState.direction === 'asc' ? a.data.lastName.localeCompare(b.data.lastName) : b.data.lastName.localeCompare(a.data.lastName);
+        } else if (sortState.active === 'email') {
+          return sortState.direction === 'asc' ? a.data.email.localeCompare(b.data.email) : b.data.email.localeCompare(a.data.email);
+        } else if (sortState.active === 'phone') {
+          return sortState.direction === 'asc' ? a.data.phone - b.data.phone : b.data.phone - a.data.phone;
+        } else if (sortState.active === 'gender') {
+          return sortState.direction === 'asc' ? a.data.gender.localeCompare(b.data.gender) : b.data.gender.localeCompare(a.data.gender);
+        } else if (sortState.active === 'language') {
+          return sortState.direction === 'asc' ? a.data.language.localeCompare(b.data.language) : b.data.language.localeCompare(a.data.language);
+        } else if (sortState.active === 'dob') {
+          return sortState.direction === 'asc' ? a.data.dob - b.data.dob : b.data.dob - a.data.dob;
+        } else if (sortState.active === 'salary') {
+          return sortState.direction === 'asc' ? a.data.salary - b.data.salary : b.data.salary - a.data.salary;
+        } else {
+          return 0;
+        }
+      });
+  
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending by ${sortState.active}`);
+      console.log('sort');
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+      console.log("esort");
+    }
+  }
+  
+  
+
   displayData() {
     this.userService.loadData().subscribe(val => {
       console.log(val);
       
-      this.userDataArray = val.map(item => item.data);
-      this.dataSource = new MatTableDataSource(this.userDataArray);
+      this.userDataArray = val;
+      this.dataSource = new MatTableDataSource(
+        this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data }))
+      );
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      // console.log(this.dataSource.data)
     });
   }
   
-
+  
+  
+  get fc() {
+    return this.employeeForm.controls;
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -200,7 +262,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   onSelectionChange(event: any) {
     this.selectedLanguages = event.value;
-    let lang = this.selectedLanguages.join(',');
+    this.selectedLanguagesString = event.value.join(',');
   }
 
   getControl(fieldName: string) {
@@ -230,7 +292,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       salary: this.employeeForm.value.salary,
       profile: ''
     }
-    this.userService.uploadImage(this.selectedImage, employeeData, this.changeSymbol, this.docId);
+    this.userService.uploadImage(this.selectedImage, employeeData, this.changeSymbol, this.docId, this.selectedLanguagesString);
 
     this.imgSrc = './assets/placeholder-img.png';
   }
@@ -308,7 +370,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   afterEdit() {
-    this.userService.uploadImage(this.selectedImage, this.editingRowData, this.changeSymbol, this.editingRowId)
+    this.userService.uploadImage(this.selectedImage, this.editingRowData, this.changeSymbol, this.editingRowId, this.selectedLanguagesString);
     this.editingRowId = '';
     this.changeSymbol = true;
   }

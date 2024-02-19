@@ -11,11 +11,11 @@
 
     <div class="mat-elevation-z8">
 
-        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event, dataSource.data )">
 
             <ng-container matColumnDef="srNo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> srNo </th>
-                <td mat-cell *matCellDef="let row"> {{row.srNo}} </td>
+                <td mat-cell *matCellDef="let row"> {{row.data.srNo}} </td>
             </ng-container>
 
 
@@ -27,7 +27,7 @@
                             style="width: 80px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.firstName }}
+                        {{ row.data.firstName }}
                     </ng-container>
                 </td>
             </ng-container>
@@ -42,7 +42,7 @@
                             style="width: 100px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.lastName }}
+                        {{ row.data.lastName }}
                     </ng-container>
                 </td>
             </ng-container>
@@ -52,10 +52,11 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input type="email" class="underline-input" [(ngModel)]="editingRowData.email" style="width: 130px;">
+                        <input type="email" class="underline-input" [(ngModel)]="editingRowData.email"
+                            style="width: 130px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.email }}
+                        {{ row.data.email }}
                     </ng-container>
                 </td>
             </ng-container>
@@ -64,10 +65,16 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input type="number" class="underline-input" [(ngModel)]="editingRowData.phone" style="width: 110px;">
+                        <input 
+                        type="text" 
+                        class="underline-input" 
+                        [(ngModel)]="editingRowData.phone"
+                        style="width: 110px;" 
+                        maxlength="15"
+                        appNumericInput>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.phone }}
+                        {{ row.data.phone }}
                     </ng-container>
                 </td>
             </ng-container>
@@ -82,7 +89,7 @@
                         </mat-radio-group>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.gender }}
+                        {{ row.data.gender }}
                     </ng-container>
                 </td>
             </ng-container>
@@ -92,14 +99,14 @@
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <mat-select [(ngModel)]="editingRowData.language" multiple
-                            (selectionChange)="onSelectionChange($event)" class="select-box" style="width: 150px;" 
+                            (selectionChange)="onSelectionChange($event)" class="select-box" style="width: 150px;"
                             [(ngModel)]="row.data.language">
                             <mat-option *ngFor="let language of languageList" [value]="language">{{ language
                                 }}</mat-option>
                         </mat-select>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.language }}
+                        {{ row.data.language }}
                     </ng-container>
                 </td>
             </ng-container>
@@ -109,28 +116,28 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Dob </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" 
-                        [max]="maxDate" [min]="minDate" [(ngModel)]="editingRowData.dob" 
-                        placeholder="Enter your BirthDay.." readonly> 
+                        <input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" [max]="maxDate"
+                            [min]="minDate" [(ngModel)]="editingRowData.dob" placeholder="Enter your BirthDay.."
+                            readonly>
                         <mat-hint>MM/DD/YYYY</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.dob.toDate() | date }}
+                        {{ row.data.dob.toDate() | date }}
                     </ng-container>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="salary">
-                <th mat-header-cell *matHeaderCellDef > Salary </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Salary </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <input currencyMask  type="text" class="underline-input" [(ngModel)]="editingRowData.salary">
+                        <input currencyMask type="text" class="underline-input" [(ngModel)]="editingRowData.salary" appNumericInput>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.salary | currency : 'INR' }}
-                    </ng-container>  
+                        {{ row.data.salary | currency : 'INR' }}
+                    </ng-container>
                 </td>
             </ng-container>
 
@@ -148,7 +155,7 @@
                         </div>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        <img src="{{row.profile}}" width="180px" height="130px">
+                        <img src="{{row.data.profile}}" width="180px" height="130px">
                     </ng-container>
                 </td>
             </ng-container>
@@ -176,7 +183,8 @@
             </tr>
         </table>
 
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
+            showFirstLastButtons></mat-paginator>
     </div>
 
 </mat-card>
@@ -228,9 +236,16 @@
 
                         <mat-form-field>
                             <mat-label>Phone</mat-label>
-                            <input matInput type="number" formControlName="phone">
+                            <input 
+                            matInput 
+                            type="text" 
+                            formControlName="phone" 
+                            maxlength="10" 
+                            >
                             <mat-error>Phone Number is required</mat-error>
+                            
                         </mat-form-field>
+
                     </div>
 
                     <section class="example-section">
@@ -244,17 +259,16 @@
                     <div class="box">
                         <mat-form-field class="mg">
                             <mat-label>Language</mat-label>
-                            <mat-select formControlName="language" value="lang" multiple
-                                (selectionChange)="onSelectionChange($event)">
-                                <mat-option *ngFor="let language of languageList" [value]="language">{{ language
-                                    }}</mat-option>
+                            <mat-select formControlName="language" value="lang" multiple (selectionChange)="onSelectionChange($event)">
+                                <mat-option *ngFor="let language of languageList" [value]="language">{{ language }}</mat-option>
                             </mat-select>
                             <mat-error *ngIf="!selectedLanguages.length">Please select at least one language</mat-error>
                         </mat-form-field>
+                        
 
                         <mat-form-field>
                             <mat-label>DOB</mat-label>
-                            <input matInput [matDatepicker]="datepicker" formControlName="dob">
+                            <input matInput [matDatepicker]="datepicker" formControlName="dob" readonly>
                             <mat-hint>MM/DD/YYYY</mat-hint>
                             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
                             <mat-datepicker #datepicker></mat-datepicker>
@@ -264,7 +278,7 @@
 
                     <mat-form-field>
                         <mat-label>Salary</mat-label>
-                        <input currencyMask matInput type="text" formControlName="salary" >
+                        <input currencyMask matInput type="text" formControlName="salary" appNumericInput>
                         <mat-error>Please enter salary amount</mat-error>
                     </mat-form-field>
 

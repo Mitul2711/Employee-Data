@@ -6,7 +6,7 @@ export interface UserData {
     email: string;
     phone: number;
     gender: string;
-    language: string[];
+    language: string;
     dob: Date;
     salary: string;
     profile: '';

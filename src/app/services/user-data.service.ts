@@ -18,14 +18,14 @@ export class UserDataService implements OnInit {
 
   }
 
-  uploadImage(selectedImage: any, employeeData: any, changeSymbol: any, id: any) {
+  uploadImage(selectedImage: any, employeeData: any, changeSymbol: any, id: any, selectedLanguagesString: any) {
 
     if (!selectedImage) {
       employeeData.profile = './assets/placeholder-img.png';
       if (!changeSymbol) {
-        this.editData(id, employeeData);
+        this.editData(id, employeeData, selectedLanguagesString);
       } else {
-        this.uploadData(employeeData);
+        this.uploadData(employeeData, selectedLanguagesString);
       }
     } else {
       const filePath = `profile/${Date.now()}`;
@@ -37,16 +37,18 @@ export class UserDataService implements OnInit {
           employeeData.profile = url;
 
           if (!changeSymbol) {
-            this.editData(id, employeeData);
+            this.editData(id, employeeData, selectedLanguagesString);
           } else {
-            this.uploadData(employeeData);
+            this.uploadData(employeeData, selectedLanguagesString);
           }
         })
       })
     }
   }
 
-  uploadData(employeeData: any) {
+  uploadData(employeeData: any, selectedLanguagesString: any) {
+    employeeData.language = selectedLanguagesString;
+
     this.afs.collection('employee').get().toPromise().then(querySnapshot => {
       if (querySnapshot) {
         const srNo = querySnapshot.size + 1; 
@@ -59,6 +61,7 @@ export class UserDataService implements OnInit {
       }
     })
   }
+
   
 
   loadData() {
@@ -66,7 +69,8 @@ export class UserDataService implements OnInit {
       map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data();
-          return { data };
+          const id = a.payload.doc.id;
+          return { id, data };
         })
       })
     )
@@ -113,12 +117,17 @@ export class UserDataService implements OnInit {
       })
     }
   }
-
-  editData(id: any, employeeData: any) {
+  editData(id: any, employeeData: any, selectedLanguagesString: string) {
+    // Add the 'language' field to the employeeData object
+    employeeData.language = selectedLanguagesString;
+  
     this.afs.collection('employee').doc(id).update(employeeData).then(() => {
       console.log("Data edited");
-    })
+    }).catch(error => {
+      console.error("Error editing data:", error);
+    });
   }
+  
 
   loadOneData(id: any) {
     return this.afs.collection('employee').doc(id).valueChanges()

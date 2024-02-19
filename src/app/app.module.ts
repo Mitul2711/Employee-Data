@@ -48,7 +48,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatCardModule
+    MatCardModule,
+    
     // MatTableDataSource,
   ],
   providers: [MatSortModule],
