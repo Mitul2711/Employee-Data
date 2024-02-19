@@ -62,12 +62,11 @@ export class UserDataService implements OnInit {
   
 
   loadData() {
-    return this.afs.collection('employee').snapshotChanges().pipe(
+    return this.afs.collection('employee', ref => ref.orderBy('srNo')).snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data();
-          const id = a.payload.doc.id;
-          return { id, data };
+          return { data };
         })
       })
     )
@@ -77,30 +76,28 @@ export class UserDataService implements OnInit {
     return this.afs.collection('employee').doc(id).valueChanges();
   }
 
-  
+
   deleteData(id: any) {
+
     this.afs.collection('employee').doc(id).ref.get().then(doc => {
+
       const deletedSrNo = (doc.data() as UserData).srNo;
+
       this.afs.collection('employee', ref => ref.where('srNo', '>', deletedSrNo)).get().subscribe(querySnapshot => {
         querySnapshot.forEach(doc => {
+
           const updatedSrNo = (doc.data() as UserData).srNo - 1;
-          this.afs.collection('employee').doc(doc.id).update({ srNo: updatedSrNo })
-            .then(() => {
-              console.log(`Updated srNo for document ${doc.id}`);
+
+          this.afs.collection('employee').doc(doc.id).update({ srNo: updatedSrNo }).then(() => {
+
+              console.log("srNo updated");
             })
-            .catch(error => {
-              console.error('Error updating document:', error);
-            });
         });
       });
-      // Now delete the specified data
+      
       this.afs.collection('employee').doc(id).delete().then(() => {
         console.log('Data deleted');
-      }).catch(error => {
-        console.error('Error deleting document:', error);
-      });
-    }).catch(error => {
-      console.error('Error getting document:', error);
+      })
     });
   }
 

@@ -11,23 +11,23 @@
 
     <div class="mat-elevation-z8">
 
-        <table mat-table [dataSource]="dataSource" matSort>
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
 
             <ng-container matColumnDef="srNo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> srNo </th>
-                <td mat-cell *matCellDef="let row"> {{row.data.srNo}} </td>
+                <td mat-cell *matCellDef="let row"> {{row.srNo}} </td>
             </ng-container>
 
 
             <ng-container matColumnDef="firstName">
-                <th mat-header-cell *matHeaderCellDef> FirstName </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> FirstName </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="text" class="underline-input" [(ngModel)]="editingRowData.firstName"
                             style="width: 80px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.firstName }}
+                        {{ row.firstName }}
                     </ng-container>
                 </td>
             </ng-container>
@@ -35,45 +35,45 @@
 
 
             <ng-container matColumnDef="lastName">
-                <th mat-header-cell *matHeaderCellDef> LastName </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> LastName </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="text" class="underline-input" [(ngModel)]="editingRowData.lastName"
                             style="width: 100px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.lastName }}
+                        {{ row.lastName }}
                     </ng-container>
                 </td>
             </ng-container>
 
 
             <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="email" class="underline-input" [(ngModel)]="editingRowData.email" style="width: 130px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.email }}
+                        {{ row.email }}
                     </ng-container>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="phone">
-                <th mat-header-cell *matHeaderCellDef> Phone </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="number" class="underline-input" [(ngModel)]="editingRowData.phone" style="width: 110px;">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.phone }}
+                        {{ row.phone }}
                     </ng-container>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="gender">
-                <th mat-header-cell *matHeaderCellDef> Gender </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gender </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <mat-radio-group [(ngModel)]="editingRowData.gender">
@@ -82,13 +82,13 @@
                         </mat-radio-group>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.gender }}
+                        {{ row.gender }}
                     </ng-container>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="language">
-                <th mat-header-cell *matHeaderCellDef> Language </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Language </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <mat-select [(ngModel)]="editingRowData.language" multiple
@@ -99,14 +99,14 @@
                         </mat-select>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.language }}
+                        {{ row.language }}
                     </ng-container>
                 </td>
             </ng-container>
 
 
             <ng-container matColumnDef="dob">
-                <th mat-header-cell *matHeaderCellDef> Dob </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Dob </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" 
@@ -117,19 +117,19 @@
                         <mat-datepicker #picker></mat-datepicker>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.dob.toDate() | date }}
+                        {{ row.dob.toDate() | date }}
                     </ng-container>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="salary">
-                <th mat-header-cell *matHeaderCellDef> Salary </th>
+                <th mat-header-cell *matHeaderCellDef > Salary </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input currencyMask  type="text" class="underline-input" [(ngModel)]="editingRowData.salary">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.salary | currency : 'INR' }}
+                        {{ row.salary | currency : 'INR' }}
                     </ng-container>  
                 </td>
             </ng-container>
@@ -148,7 +148,7 @@
                         </div>
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
-                        <img src="{{row.data.profile}}" width="180px" height="130px">
+                        <img src="{{row.profile}}" width="180px" height="130px">
                     </ng-container>
                 </td>
             </ng-container>

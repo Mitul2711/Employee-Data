@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Directive, ElementRef, HostListener, NgModule, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MaterialModule } from '../../module/material.module';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,8 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
-import { Sort } from '@angular/material/sort';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -105,7 +104,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private userService: UserDataService,
     private route: ActivatedRoute,
-    private afs: AngularFirestore
+    private _liveAnnouncer: LiveAnnouncer
   ) {
 
     this.maxDate = new Date();
@@ -150,6 +149,18 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   }
 
+  announceSortChange(sortState: Sort) {
+    
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+      console.log('sort');
+      
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+      console.log("esort");
+      
+    }
+  }
 
 
   applyFilter(event: Event) {
@@ -169,18 +180,17 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.displayData();
   }
 
-
   displayData() {
     this.userService.loadData().subscribe(val => {
-      this.userDataArray = val;
-      this.dataSource = new MatTableDataSource
-        (this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data })));
+      console.log(val);
+      
+      this.userDataArray = val.map(item => item.data);
+      this.dataSource = new MatTableDataSource(this.userDataArray);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      console.log(this.dataSource.data)
-
-    })
+    });
   }
+  
 
 
   ngAfterViewInit() {
