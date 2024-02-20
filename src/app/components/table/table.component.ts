@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Directive, ElementRef, HostListener, NgModule, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { MaterialModule } from '../../module/material.module';
+
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,6 +16,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { MaterialModule } from 'src/module/material.module';
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -87,6 +89,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   maxDate = new Date();
   minDate = new Date();
   selectedLanguagesString: string = '';
+  arrayLang: any;
 
 
   toppings = new FormControl('');
@@ -104,14 +107,16 @@ export class TableComponent implements OnInit, AfterViewInit {
   post: any;
   editingRowData: any;
   isLoading: boolean;
+  base64Image: SafeResourceUrl | undefined;
+
 
   constructor(
     private fb: FormBuilder,
     private userService: UserDataService,
     private route: ActivatedRoute,
     private _liveAnnouncer: LiveAnnouncer,
-    private el: ElementRef,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private sanitizer: DomSanitizer
   ) {
 
     this.maxDate = new Date();
@@ -173,13 +178,59 @@ export class TableComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.displayData();
   }
-
+  
   onKeyPress(event: KeyboardEvent) {
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
     if (!allowedKeys.includes(event.key) && isNaN(Number(event.key))) {
       event.preventDefault();
+    } else {
+      const input = event.target as HTMLInputElement;
+      let cursorStart = input.selectionStart ?? 0; // Default to 0 if null
+      const cursorEnd = input.selectionEnd ?? 0; // Default to 0 if null
+      let inputValue = input.value;
+  
+  
+      // Remove non-numeric characters
+      inputValue = inputValue.replace(/\D/g, '');
+  
+      // Apply mask
+      let maskedValue = '';
+      let i = 0;
+      if (inputValue.length >= 2) {
+        maskedValue += `(+${inputValue.substring(0, 2)}) `;
+        i = 2;
+      }
+      if (inputValue.length >= 7) {
+        maskedValue += `${inputValue.substring(2, 7)} `;
+        i = 7;
+      }
+      if (inputValue.length >= 12) {
+        maskedValue += `${inputValue.substring(7, 12)}`;
+        i = 12;
+      }
+      // Append remaining digits without mask
+      if (inputValue.length > i) {
+        maskedValue += inputValue.substring(i);
+      }
+  
+      // Update input value and cursor position
+      input.value = maskedValue;
+      // Adjust cursor position to account for added mask characters
+      let newCursorPosition = cursorStart + (maskedValue.length - inputValue.length);
+  
+      // Handle special case when removing characters
+      if ((event.key === 'Backspace' || event.key === 'Delete') && cursorStart === cursorEnd && cursorStart > 0) {
+        if (inputValue.length === 7 || inputValue.length === 2) {
+          newCursorPosition = 3; // Adjust cursor when deleting a group of characters
+        }
+      }
+  
+      // Set new cursor position
+      input.setSelectionRange(newCursorPosition, newCursorPosition);
     }
   }
+  
+
 
   // not able to enter number
 
@@ -195,7 +246,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     const inputValue = event.key;
     const alphabeticRegex = /^[a-zA-Z]*$/;
     if (!alphabeticRegex.test(inputValue)) {
-      event.preventDefault(); // Prevent the input of non-alphabetic characters
+      event.preventDefault(); 
     }
   }
 
@@ -205,21 +256,17 @@ export class TableComponent implements OnInit, AfterViewInit {
     const inputValue = input.value;
     const key = event.key;
 
-    // Allow only numbers, backspace, and certain navigation keys
     if (!allowedKeys.includes(key) && isNaN(Number(key))) {
       event.preventDefault();
     } else {
-      // Handle backspace and delete keys
       if (key === 'Backspace' || key === 'Delete') {
         return;
       }
 
-      // Auto-format the input value as MM/DD/YYYY
       if (inputValue.length === 2 || inputValue.length === 5) {
         input.value += '/';
       }
 
-      // Prevent the input value from exceeding the format MM/DD/YYYY
       if (inputValue.length >= 10) {
         event.preventDefault();
       }
@@ -254,10 +301,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       });
 
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending by ${sortState.active}`);
-      console.log('sort');
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
-      console.log("esort");
     }
   }
 
@@ -267,7 +312,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     this.spinner.show();
     this.userService.loadData().subscribe(val => {
-      console.log(val);
 
       this.userDataArray = val;
       this.dataSource = new MatTableDataSource(
@@ -309,10 +353,12 @@ export class TableComponent implements OnInit, AfterViewInit {
   closeForm() {
     this.formVisible = false;
     this.employeeForm.reset();
+    this.imageUrl = './assets/placeholder-img.png'
   }
 
   onSubmit() {
 
+    debugger
     const userData: UserData = {
       srNo: 0,
       firstName: this.employeeForm.value.firstName,
@@ -346,7 +392,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 
   // image-input
-
   onDrop(event: DragEvent) {
     event.preventDefault();
     const files = event.dataTransfer?.files;
@@ -355,48 +400,42 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.handleFile(file);
     }
   }
-
+  
   onDragOver(event: DragEvent) {
     event.preventDefault();
   }
-
+  
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.handleFile(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.imgSrc = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-      this.selectedImage = file;
     } else {
-
       this.imageUrl = './assets/placeholder-img.png';
-
       this.selectedImage = null;
     }
   }
-
+  
   private handleFile(file: File) {
     const reader = new FileReader();
     reader.onload = () => {
-      this.imageUrl = reader.result as string;
+      const base64String = reader.result as string; 
+      this.imageUrl = base64String;
+      this.selectedImage = file;
     };
     reader.readAsDataURL(file);
   }
-
-
+  
   openImageInCard(event: MouseEvent) {
     event.preventDefault();
   }
-
+  
   // edit Data
 
   loadEditingRowData(id: any) {
     this.userService.loadOneData(id).subscribe((data: any) => {
       this.editingRowData = data;
+      this.arrayLang = this.editingRowData.language.split(',');
     });
   }
 

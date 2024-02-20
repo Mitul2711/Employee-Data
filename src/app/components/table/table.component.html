@@ -8,7 +8,7 @@
 <mat-card>
     <mat-form-field>
         <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Search your Data here.." #input>
     </mat-form-field>
 
 
@@ -73,9 +73,9 @@
                         class="underline-input" 
                         [(ngModel)]="editingRowData.phone"
                         style="width: 110px;" 
-                        maxlength="15"
+                        maxlength="17"
                         appNumericInput
-                        (keypress)="onKeyPress($event)"
+                        (keydown)="onKeyPress($event)"
                         >
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
@@ -103,9 +103,8 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Language </th>
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
-                        <mat-select [(ngModel)]="editingRowData.language" multiple
-                            (selectionChange)="onSelectionChange($event)" class="select-box" style="width: 150px;"
-                            [(ngModel)]="row.data.language">
+                        <mat-select multiple [(ngModel)]="arrayLang"
+                            (selectionChange)="onSelectionChange($event)" class="select-box" style="width: 150px;">
                             <mat-option *ngFor="let language of languageList" [value]="language">{{ language
                                 }}</mat-option>
                         </mat-select>
@@ -228,7 +227,7 @@
                     <div class="box">
                         <mat-form-field class="mg">
                             <mat-label>Email</mat-label>
-                            <input matInput type="email" formControlName="email">
+                            <input matInput type="email" formControlName="email" placeholder="example@gmail.com">
                             <mat-error
                                 *ngIf="getControl('email')?.hasError('required') && (getControl('email')?.touched || getControl('email')?.dirty)">
                                 Email is required.
@@ -245,8 +244,9 @@
                             matInput 
                             type="text" 
                             formControlName="phone" 
-                            maxlength="10" 
+                            maxlength="17" 
                             (keydown)="onKeyPress($event)"
+                            placeholder="(+91) 00000 00000"
                             >
                             <mat-error>Phone Number is required</mat-error>
                             
@@ -279,7 +279,7 @@
                                 [matDatepicker]="datepicker" 
                                 formControlName="dob" 
                                 maxlength="10"
-                                (keydown)="onDate($event)"
+                                (keydown)="onDate($event)"  
                                 >
                             <mat-hint>MM/DD/YYYY</mat-hint>
                             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
@@ -299,15 +299,15 @@
                             <h3>Upload Employee Image</h3>
                             <div *ngIf="imageUrl" class="image-container">
                                 <div class="image-card" (click)="openImageInCard($event)">
-                                    <img [src]="imageUrl" alt="Selected Image">
+                                    <img [src]="imageUrl">
                                 </div>
                             </div>
 
                             <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
                                 <p>Drag & drop an image file here</p>
                                 <div class="image-input-container">
-                                    <input type="file" (change)="onFileSelected($event)" accept="image/*"
-                                        formControlName="profile" />
+                                    <input type="file" (change)="onFileSelected($event)" 
+                                    accept="image/*" formControlName="profile" />
                                 </div>
                             </div>
                         </div>

@@ -23,35 +23,34 @@ export class UserDataService implements OnInit {
   ngOnInit(): void {
 
   }
-
-  uploadImage(selectedImage: any, employeeData: any, changeSymbol: any, id: any, selectedLanguagesString: any) {
-
-    if (!selectedImage) {
-      employeeData.profile = './assets/placeholder-img.png';
-      if (!changeSymbol) {
-        this.editData(id, employeeData, selectedLanguagesString);
-      } else {
-        this.uploadData(employeeData, selectedLanguagesString);
-      }
+uploadImage(selectedImage: any, employeeData: any, changeSymbol: any, id: any, selectedLanguagesString: any) {
+  if (!selectedImage) {
+    employeeData.profile = './assets/placeholder-img.png';
+    if (!changeSymbol) {
+      this.editData(id, employeeData, selectedLanguagesString);
     } else {
-      const filePath = `profile/${Date.now()}`;
-
-      this.storage.upload(filePath, selectedImage).then(uploadTaskSnapshot => {
-        console.log("Image Upload");
-
-        uploadTaskSnapshot.ref.getDownloadURL().then(url => {
-          employeeData.profile = url;
-
-          if (!changeSymbol) {
-            this.spinner.show();
-            this.editData(id, employeeData, selectedLanguagesString);
-          } else {
-            this.uploadData(employeeData, selectedLanguagesString);
-          }
-        })
-      })
+      this.uploadData(employeeData, selectedLanguagesString);
     }
+  } else {
+    const filePath = `profile/${Date.now()}`;
+
+    this.storage.upload(filePath, selectedImage).then(uploadTaskSnapshot => {
+      console.log("Image Upload");
+
+      uploadTaskSnapshot.ref.getDownloadURL().then(url => {
+        employeeData.profile = url;
+
+        if (!changeSymbol) {
+          this.spinner.show();
+          this.editData(id, employeeData, selectedLanguagesString);
+        } else {
+          this.uploadData(employeeData, selectedLanguagesString);
+        }
+      });
+    });
   }
+}
+
 
   uploadData(employeeData: any, selectedLanguagesString: any) {
     employeeData.language = selectedLanguagesString;
