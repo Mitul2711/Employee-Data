@@ -8,9 +8,6 @@ table {
   width: 100%;
 }
 
-td, th {
-  width: 25%;
-}
 
 .example-form-field {
   width: 200px;
@@ -31,6 +28,11 @@ td, th {
   height: auto;
 }
 
+.image-input-container {
+  margin-bottom: 35px;
+  margin-left: 75px;
+}
+
 .formBox {
   position: fixed; 
   top: 50%; 
@@ -38,7 +40,7 @@ td, th {
   transform: translate(-50%, -50%); 
   z-index: 3;
   max-width: 800px; 
-  max-height: 90vh;
+  max-height: 80vh;
   overflow: auto; 
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 1.5);
 }
@@ -105,7 +107,7 @@ td, th {
 }
 
 
-/* image-css */
+image-css
 
 .card {
   border: 1px solid #ccc;
@@ -129,7 +131,7 @@ td, th {
   border-radius: 5px;
   overflow: hidden;
   margin-bottom: 10px;
-  margin-left: 116px;
+  margin-left: 133px;
 }
 
 .image-card img {
@@ -139,7 +141,8 @@ td, th {
 }
 
 .btn {
-  margin-left: 10px;
+  margin-left: 15px;
+  margin-top: 15px;
 }
 
 i {
@@ -148,14 +151,22 @@ i {
   cursor: pointer;
 }
 
-.underline-input {
-  border: none;
-  border-bottom: 1px solid black; 
-  outline: none; 
-}
 
 .select-box {
   border: 1px solid #ccc;
   border-radius: 4px; 
   padding: 5px; 
+}
+
+.editImgSelect {
+  margin-left: -74px;
+  margin-top: 5px;
+  color: transparent;
+}
+
+
+
+
+.example-full-width {
+  width: 100%;
 }

@@ -332,8 +332,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
   }
 
   onSelectionChange(event: any) {
@@ -358,7 +358,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
 
-    debugger
     const userData: UserData = {
       srNo: 0,
       firstName: this.employeeForm.value.firstName,
@@ -376,6 +375,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.userService.uploadImage(this.selectedImage, userData, this.changeSymbol, this.docId, this.selectedLanguagesString);
 
     this.imgSrc = './assets/placeholder-img.png';
+
+    this.closeForm();
 
   }
 

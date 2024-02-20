@@ -1,4 +1,6 @@
-<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+    <p style="color: white"> Loading... </p>
+</ngx-spinner>
 
 
 <div class="container">
@@ -6,190 +8,197 @@
 </div>
 
 <mat-card>
-    <mat-form-field>
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Search your Data here.." #input>
-    </mat-form-field>
+    <mat-card-content>
+        <mat-form-field>
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search your Data here.." #input>
+        </mat-form-field>
 
 
-    <div class="mat-elevation-z8">
+        <div class="mat-elevation-z8">
 
-        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event, dataSource.data )">
+            <table mat-table [dataSource]="dataSource" matSort
+                (matSortChange)="announceSortChange($event, dataSource.data )">
 
-            <ng-container matColumnDef="srNo">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> srNo </th>
-                <td mat-cell *matCellDef="let row"> {{row.data.srNo}} </td>
-            </ng-container>
-
-
-            <ng-container matColumnDef="firstName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> FirstName </th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="editingRowId === row.id">
-                        <input type="text" class="underline-input" [(ngModel)]="editingRowData.firstName"
-                            style="width: 80px;"  (keypress)="onKey($event)">
-                    </ng-container>
-                    <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.firstName }}
-                    </ng-container>
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="srNo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> srNo </th>
+                    <td mat-cell *matCellDef="let row"> {{row.data.srNo}} </td>
+                </ng-container>
 
 
-
-            <ng-container matColumnDef="lastName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> LastName </th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="editingRowId === row.id">
-                        <input type="text" class="underline-input" [(ngModel)]="editingRowData.lastName"
-                            style="width: 100px;"  (keypress)="onKey($event)">
-                    </ng-container>
-                    <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.lastName }}
-                    </ng-container>
-                </td>
-            </ng-container>
-
-
-            <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="editingRowId === row.id">
-                        <input type="email" class="underline-input" [(ngModel)]="editingRowData.email"
-                            style="width: 130px;">
-                    </ng-container>
-                    <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.email }}
-                    </ng-container>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="phone">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone </th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="editingRowId === row.id">
-                        <input 
-                        type="text" 
-                        class="underline-input" 
-                        [(ngModel)]="editingRowData.phone"
-                        style="width: 110px;" 
-                        maxlength="17"
-                        appNumericInput
-                        (keydown)="onKeyPress($event)"
-                        >
-                    </ng-container>
-                    <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.phone }}
-                    </ng-container>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="gender">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gender </th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="editingRowId === row.id">
-                        <mat-radio-group [(ngModel)]="editingRowData.gender">
-                            <mat-radio-button class="example-margin" value="male">Male</mat-radio-button>
-                            <mat-radio-button class="example-margin" value="female">Female</mat-radio-button>
-                        </mat-radio-group>
-                    </ng-container>
-                    <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.gender }}
-                    </ng-container>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="language">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Language </th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="editingRowId === row.id">
-                        <mat-select multiple [(ngModel)]="arrayLang"
-                            (selectionChange)="onSelectionChange($event)" class="select-box" style="width: 150px;">
-                            <mat-option *ngFor="let language of languageList" [value]="language">{{ language
-                                }}</mat-option>
-                        </mat-select>
-                    </ng-container>
-                    <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.language }}
-                    </ng-container>
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="firstName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> FirstName </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="editingRowId === row.id">
+                            <mat-form-field>
+                                <input matInput type="text" class="underline-input"
+                                    [(ngModel)]="editingRowData.firstName" (keypress)="onKey($event)">
+                            </mat-form-field>
+                        </ng-container>
+                        <ng-container *ngIf="editingRowId !== row.id">
+                            {{ row.data.firstName }}
+                        </ng-container>
+                    </td>
+                </ng-container>
 
 
-            <ng-container matColumnDef="dob">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Dob </th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="editingRowId === row.id">
-                        <input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" [max]="maxDate"
-                            [min]="minDate" [(ngModel)]="editingRowData.dob" placeholder="Enter your BirthDay.."
-                            (keydown)="onDate($event)">
-                        <mat-hint>MM/DD/YYYY</mat-hint>
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                    </ng-container>
-                    <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.dob.toDate() | date }}
-                    </ng-container>
-                </td>
-            </ng-container>
 
-            <ng-container matColumnDef="salary">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Salary </th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="editingRowId === row.id">
-                        <input currencyMask type="text" class="underline-input" [(ngModel)]="editingRowData.salary" appNumericInput>
-                    </ng-container>
-                    <ng-container *ngIf="editingRowId !== row.id">
-                        {{ row.data.salary | currency : 'INR' }}
-                    </ng-container>
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="lastName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> LastName </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="editingRowId === row.id">
+                            <mat-form-field>
+                                <input matInput type="text" class="underline-input"
+                                    [(ngModel)]="editingRowData.lastName" (keypress)="onKey($event)">
+                            </mat-form-field>
+                        </ng-container>
+                        <ng-container *ngIf="editingRowId !== row.id">
+                            {{ row.data.lastName }}
+                        </ng-container>
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="profile">
-                <th mat-header-cell *matHeaderCellDef> Profile </th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="editingRowId === row.id">
-                        <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)"
-                            style="width: 200px;">
-                            <p>Drag & drop an image file here</p>
-                            <img [src]="imageUrl" height="120px" width="180px">
-                            <div class="image-input-container">
-                                <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="editingRowId === row.id">
+                            <mat-form-field>
+                                <input matInput type="email" class="underline-input" [(ngModel)]="editingRowData.email">
+                            </mat-form-field>
+                        </ng-container>
+                        <ng-container *ngIf="editingRowId !== row.id">
+                            {{ row.data.email }}
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="phone">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="editingRowId === row.id">
+                            <mat-form-field>
+                                <input matInput type="text" class="underline-input" [(ngModel)]="editingRowData.phone"
+                                    maxlength="17" appNumericInput (keydown)="onKeyPress($event)">
+                            </mat-form-field>
+                        </ng-container>
+                        <ng-container *ngIf="editingRowId !== row.id">
+                            {{ row.data.phone }}
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="gender">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Gender </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="editingRowId === row.id">
+                            <mat-radio-group [(ngModel)]="editingRowData.gender">
+                                <mat-radio-button class="example-margin" value="male">Male</mat-radio-button>
+                                <mat-radio-button class="example-margin" value="female">Female</mat-radio-button>
+                            </mat-radio-group>
+                        </ng-container>
+                        <ng-container *ngIf="editingRowId !== row.id">
+                            {{ row.data.gender }}
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="language">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Language </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="editingRowId === row.id">
+                            <mat-select multiple [(value)]="arrayLang" (selectionChange)="onSelectionChange($event)"
+                                class="select-box">
+                                <mat-option *ngFor="let language of languageList" [value]="language">{{ language
+                                    }}</mat-option>
+                            </mat-select>
+                        </ng-container>
+                        <ng-container *ngIf="editingRowId !== row.id">
+                            {{ row.data.language }}
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="dob">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Dob </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="editingRowId === row.id">
+                            <input mat-input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" [max]="maxDate"
+                                [min]="minDate" [(ngModel)]="editingRowData.dob" placeholder="Enter your DOB.."
+                                (keydown)="onDate($event)">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </ng-container>
+                        <ng-container *ngIf="editingRowId !== row.id">
+                            {{ row.data.dob.toDate() | date }}
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="salary">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Salary </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="editingRowId === row.id">
+                            <mat-form-field>
+                                <input matInput currencyMask type="text" class="underline-input"
+                                    [(ngModel)]="editingRowData.salary" appNumericInput>
+                            </mat-form-field>
+                        </ng-container>
+                        <ng-container *ngIf="editingRowId !== row.id">
+                            {{ row.data.salary | currency : 'INR' }}
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="profile">
+                    <th mat-header-cell *matHeaderCellDef> Profile </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="editingRowId === row.id">
+                            <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+                                <p>Drag & drop an image</p>
+                                <img [src]="imageUrl" height="100px" width="150px">
+                                <div class="image-input-container">
+                                    <input type="file" class="editImgSelect" (change)="onFileSelected($event)"
+                                        accept="image/*">
+                                </div>
                             </div>
-                        </div>
-                    </ng-container>
-                    <ng-container *ngIf="editingRowId !== row.id">
-                        <img src="{{row.data.profile}}" width="180px" height="130px">
-                    </ng-container>
-                </td>
-            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="editingRowId !== row.id">
+                            <img src="{{row.data.profile}}" width="150px" height="100px">
+                        </ng-container>
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef> Action </th>
-                <td mat-cell *matCellDef="let row">
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let row">
+                        <ng-container *ngIf="row.id === editingRowId; else readOnly">
+                            <a (click)="afterEdit()"><i class="fa fa-solid fa-check" style="color: #04ff00;"></i></a>
+                        </ng-container>
+                        <ng-template #readOnly>
+                            <a (click)="onEdit(row.id)"><i class="fa fa-solid fa-file" style="color: #0058f0;"></i></a>
+                        </ng-template>
+                        <a (click)="deleteData(row.data.profile, row.id)"><i class="fa fa-solid fa-trash"
+                                style="color: #fa0000;"></i></a>
+                    </td>
+                </ng-container>
 
-                    <a (click)="onEdit(row.id)" *ngIf="changeSymbol"><i class="fa fa-solid fa-file"
-                            style="color: #0058f0;"></i></a>
 
-                    <a *ngIf="!changeSymbol" (click)="afterEdit()"><i class="fa fa-solid fa-check"
-                            style="color: #04ff00;"></i></a>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-                    <a (click)="deleteData(row.data.profile, row.id)"><i class="fa fa-solid fa-trash"
-                            style="color: #fa0000;"></i></a>
-                </td>
-            </ng-container>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                </tr>
+            </table>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
+                showFirstLastButtons></mat-paginator>
+        </div>
 
-            <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-            </tr>
-        </table>
-
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
-            showFirstLastButtons></mat-paginator>
-    </div>
+    </mat-card-content>
 
 </mat-card>
 
@@ -212,13 +221,15 @@
 
                         <mat-form-field class="mg">
                             <mat-label>FirstName</mat-label>
-                            <input matInput type="text" formControlName="firstName" (keypress)="onKey($event)" in input field>
+                            <input matInput type="text" formControlName="firstName" (keypress)="onKey($event)" in input
+                                field>
                             <mat-error>First name is required.</mat-error>
                         </mat-form-field>
 
                         <mat-form-field>
                             <mat-label>LastName</mat-label>
-                            <input matInput type="text" formControlName="lastName" (keypress)="onKey($event)" in input field>
+                            <input matInput type="text" formControlName="lastName" (keypress)="onKey($event)" in input
+                                field>
                             <mat-error>Last name is required.</mat-error>
                         </mat-form-field>
 
@@ -240,16 +251,10 @@
 
                         <mat-form-field>
                             <mat-label>Phone</mat-label>
-                            <input 
-                            matInput 
-                            type="text" 
-                            formControlName="phone" 
-                            maxlength="17" 
-                            (keydown)="onKeyPress($event)"
-                            placeholder="(+91) 00000 00000"
-                            >
+                            <input matInput type="text" formControlName="phone" maxlength="17"
+                                (keydown)="onKeyPress($event)" placeholder="(+91) 00000 00000">
                             <mat-error>Phone Number is required</mat-error>
-                            
+
                         </mat-form-field>
 
                     </div>
@@ -265,22 +270,19 @@
                     <div class="box">
                         <mat-form-field class="mg">
                             <mat-label>Language</mat-label>
-                            <mat-select formControlName="language" value="lang" multiple (selectionChange)="onSelectionChange($event)">
-                                <mat-option *ngFor="let language of languageList" [value]="language">{{ language }}</mat-option>
+                            <mat-select formControlName="language" value="lang" multiple
+                                (selectionChange)="onSelectionChange($event)">
+                                <mat-option *ngFor="let language of languageList" [value]="language">{{ language
+                                    }}</mat-option>
                             </mat-select>
                             <mat-error *ngIf="!selectedLanguages.length">Please select at least one language</mat-error>
                         </mat-form-field>
-                        
+
 
                         <mat-form-field>
                             <mat-label>DOB</mat-label>
-                            <input 
-                                matInput 
-                                [matDatepicker]="datepicker" 
-                                formControlName="dob" 
-                                maxlength="10"
-                                (keydown)="onDate($event)"  
-                                >
+                            <input matInput [matDatepicker]="datepicker" formControlName="dob" maxlength="10"
+                                (keydown)="onDate($event)" [max]="maxDate" [min]="minDate">
                             <mat-hint>MM/DD/YYYY</mat-hint>
                             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
                             <mat-datepicker #datepicker></mat-datepicker>
@@ -297,23 +299,24 @@
                     <div class="card">
                         <div class="card-content">
                             <h3>Upload Employee Image</h3>
-                            <div *ngIf="imageUrl" class="image-container">
+                            <div *ngIf="imageUrl" class="image-container" (drop)="onDrop($event)"
+                                (dragover)="onDragOver($event)">
                                 <div class="image-card" (click)="openImageInCard($event)">
                                     <img [src]="imageUrl">
                                 </div>
                             </div>
 
-                            <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+                            <div class="drop-zone">
                                 <p>Drag & drop an image file here</p>
                                 <div class="image-input-container">
-                                    <input type="file" (change)="onFileSelected($event)" 
-                                    accept="image/*" formControlName="profile" />
+                                    <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                                        formControlName="profile" />
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <button mat-raised-button>Submit</button>
+                    <button mat-raised-button class="btn" [disabled]="employeeForm.invalid">Submit</button>
                     <button mat-raised-button class="btn" (click)="closeForm()">Back</button>
                 </form>
 
