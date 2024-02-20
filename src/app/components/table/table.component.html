@@ -1,10 +1,4 @@
-<ngx-spinner
-  bdColor="rgba(51,51,51,0.8)"
-  size="medium"
-  color="#fff"
-  loadingText="Loading..."
-  type="ball-scale-multiple">
-</ngx-spinner>
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
 
 
 <div class="container">
@@ -33,7 +27,7 @@
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="text" class="underline-input" [(ngModel)]="editingRowData.firstName"
-                            style="width: 80px;">
+                            style="width: 80px;"  (keypress)="onKey($event)">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.firstName }}
@@ -48,7 +42,7 @@
                 <td mat-cell *matCellDef="let row">
                     <ng-container *ngIf="editingRowId === row.id">
                         <input type="text" class="underline-input" [(ngModel)]="editingRowData.lastName"
-                            style="width: 100px;">
+                            style="width: 100px;"  (keypress)="onKey($event)">
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.lastName }}
@@ -80,7 +74,9 @@
                         [(ngModel)]="editingRowData.phone"
                         style="width: 110px;" 
                         maxlength="15"
-                        appNumericInput>
+                        appNumericInput
+                        (keypress)="onKeyPress($event)"
+                        >
                     </ng-container>
                     <ng-container *ngIf="editingRowId !== row.id">
                         {{ row.data.phone }}
@@ -127,7 +123,7 @@
                     <ng-container *ngIf="editingRowId === row.id">
                         <input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" [max]="maxDate"
                             [min]="minDate" [(ngModel)]="editingRowData.dob" placeholder="Enter your BirthDay.."
-                            readonly>
+                            (keydown)="onDate($event)">
                         <mat-hint>MM/DD/YYYY</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
@@ -217,13 +213,13 @@
 
                         <mat-form-field class="mg">
                             <mat-label>FirstName</mat-label>
-                            <input matInput type="text" formControlName="firstName">
+                            <input matInput type="text" formControlName="firstName" (keypress)="onKey($event)" in input field>
                             <mat-error>First name is required.</mat-error>
                         </mat-form-field>
 
                         <mat-form-field>
                             <mat-label>LastName</mat-label>
-                            <input matInput type="text" formControlName="lastName">
+                            <input matInput type="text" formControlName="lastName" (keypress)="onKey($event)" in input field>
                             <mat-error>Last name is required.</mat-error>
                         </mat-form-field>
 
@@ -250,6 +246,7 @@
                             type="text" 
                             formControlName="phone" 
                             maxlength="10" 
+                            (keydown)="onKeyPress($event)"
                             >
                             <mat-error>Phone Number is required</mat-error>
                             
@@ -277,7 +274,13 @@
 
                         <mat-form-field>
                             <mat-label>DOB</mat-label>
-                            <input matInput [matDatepicker]="datepicker" formControlName="dob" readonly>
+                            <input 
+                                matInput 
+                                [matDatepicker]="datepicker" 
+                                formControlName="dob" 
+                                maxlength="10"
+                                (keydown)="onDate($event)"
+                                >
                             <mat-hint>MM/DD/YYYY</mat-hint>
                             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
                             <mat-datepicker #datepicker></mat-datepicker>

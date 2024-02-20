@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Directive, ElementRef, HostListener, NgModule, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MaterialModule } from '../../module/material.module';
@@ -56,6 +56,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   ]
 
 })
+
 
 
 export class TableComponent implements OnInit, AfterViewInit {
@@ -118,7 +119,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.minDate.setFullYear(this.minDate.getFullYear() - 100);
 
 
-    this.route.queryParams.subscribe(val => { 
+    this.route.queryParams.subscribe(val => {
       this.docId = val['id'];
       if (this.docId) {
         this.userService.loadOneData(this.docId).subscribe(post => {
@@ -143,7 +144,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           firstName: ['', Validators.required],
           lastName: ['', Validators.required],
           email: ['', [Validators.required, Validators.email]],
-          phone: ['', Validators.required ],
+          phone: ['', Validators.required],
           gender: ['', Validators.required],
           language: ['', Validators.required],
           dob: ['', Validators.required],
@@ -173,15 +174,12 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.displayData();
   }
 
-  
-  // @HostListener('keydown', ['$event'])
-  // onKeyDown(event: KeyboardEvent) {
-  //   const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End', '+'];
-  //   if (!allowedKeys.includes(event.key) && isNaN(Number(event.key))) {
-  //     event.preventDefault();
-  //   }
-  // }
-  
+  onKeyPress(event: KeyboardEvent) {
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    if (!allowedKeys.includes(event.key) && isNaN(Number(event.key))) {
+      event.preventDefault();
+    }
+  }
 
   // not able to enter number
 
@@ -193,14 +191,42 @@ export class TableComponent implements OnInit, AfterViewInit {
   //   }
   // }
 
-  // onKeyPress(event: KeyboardEvent) {
-  //   const inputValue = event.key;
-  //   const alphabeticRegex = /^[a-zA-Z]*$/;
-  //   if (!alphabeticRegex.test(inputValue)) {
-  //     event.preventDefault(); // Prevent the input of non-alphabetic characters
-  //   }
-  // }
+  onKey(event: KeyboardEvent) {
+    const inputValue = event.key;
+    const alphabeticRegex = /^[a-zA-Z]*$/;
+    if (!alphabeticRegex.test(inputValue)) {
+      event.preventDefault(); // Prevent the input of non-alphabetic characters
+    }
+  }
 
+  onDate(event: KeyboardEvent) {
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    const input = event.target as HTMLInputElement;
+    const inputValue = input.value;
+    const key = event.key;
+
+    // Allow only numbers, backspace, and certain navigation keys
+    if (!allowedKeys.includes(key) && isNaN(Number(key))) {
+      event.preventDefault();
+    } else {
+      // Handle backspace and delete keys
+      if (key === 'Backspace' || key === 'Delete') {
+        return;
+      }
+
+      // Auto-format the input value as MM/DD/YYYY
+      if (inputValue.length === 2 || inputValue.length === 5) {
+        input.value += '/';
+      }
+
+      // Prevent the input value from exceeding the format MM/DD/YYYY
+      if (inputValue.length >= 10) {
+        event.preventDefault();
+      }
+    }
+  }
+
+  
   announceSortChange(sortState: Sort, data: any[]) {
     if (sortState.direction) {
       data.sort((a: any, b: any) => {
@@ -226,7 +252,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           return 0;
         }
       });
-  
+
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending by ${sortState.active}`);
       console.log('sort');
     } else {
@@ -234,15 +260,15 @@ export class TableComponent implements OnInit, AfterViewInit {
       console.log("esort");
     }
   }
-  
-  
+
+
 
   displayData() {
-    this.isLoading = true;
+
     this.spinner.show();
     this.userService.loadData().subscribe(val => {
       console.log(val);
-      
+
       this.userDataArray = val;
       this.dataSource = new MatTableDataSource(
         this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data }))
@@ -250,14 +276,13 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
-      this.isLoading = false; // Set isLoading flag to false to hide spinner
       this.spinner.hide();
     });
 
   }
-  
-  
-  
+
+
+
   get fc() {
     return this.employeeForm.controls;
   }
@@ -288,7 +313,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
 
-    const employeeData: UserData = {
+    const userData: UserData = {
       srNo: 0,
       firstName: this.employeeForm.value.firstName,
       lastName: this.employeeForm.value.lastName,
@@ -300,16 +325,19 @@ export class TableComponent implements OnInit, AfterViewInit {
       salary: this.employeeForm.value.salary,
       profile: ''
     }
-    this.userService.uploadImage(this.selectedImage, employeeData, this.changeSymbol, this.docId, this.selectedLanguagesString);
+    this.spinner.show()
+
+    this.userService.uploadImage(this.selectedImage, userData, this.changeSymbol, this.docId, this.selectedLanguagesString);
 
     this.imgSrc = './assets/placeholder-img.png';
-    
 
   }
 
 
 
   deleteData(profile: any, docId: any) {
+
+    this.spinner.show();
 
     if (confirm("want to delete this data..")) {
       this.userService.deleteImage(profile, docId);

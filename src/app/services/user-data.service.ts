@@ -43,6 +43,7 @@ export class UserDataService implements OnInit {
           employeeData.profile = url;
 
           if (!changeSymbol) {
+            this.spinner.show();
             this.editData(id, employeeData, selectedLanguagesString);
           } else {
             this.uploadData(employeeData, selectedLanguagesString);
@@ -124,7 +125,7 @@ export class UserDataService implements OnInit {
     }
   }
   editData(id: any, employeeData: any, selectedLanguagesString: string) {
-    // Add the 'language' field to the employeeData object
+    
     employeeData.language = selectedLanguagesString;
   
     this.afs.collection('employee').doc(id).update(employeeData).then(() => {
