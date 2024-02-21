@@ -42,10 +42,11 @@ table {
   max-width: 800px; 
   max-height: 90vh;
   overflow: auto; 
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 1.5);
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5); 
 }
 
 .card-content {
+  border: 1px solid rgb(210, 206, 206);
   padding-top: 50px;
 }
 
@@ -55,7 +56,7 @@ table {
   left: 0;
   width: 100%;
   padding-top: 15px;
-  background-color: #fff; 
+  /* background-color: rgb(237, 245, 242);  */
 }
 
 .form-content {
@@ -89,7 +90,7 @@ table {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3); 
-  backdrop-filter: blur(2px); 
+  /* backdrop-filter: blur(2px);  */
   z-index: 2; 
 }
 
@@ -110,6 +111,7 @@ table {
 /* image-css */
 
 .card {
+  /* background-color: rgb(237, 245, 242); */
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 20px;
@@ -131,7 +133,7 @@ table {
   width: 200px; 
   height: 200px; 
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 95px;
   overflow: hidden;
   margin-bottom: 10px;
   /* margin-left: 133px; */
