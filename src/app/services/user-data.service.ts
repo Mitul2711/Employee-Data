@@ -24,14 +24,14 @@ export class UserDataService implements OnInit {
 
   }
 
-  uploadImage(selectedImage: any, employeeData: any, changeSymbol: any, id: any, selectedLanguagesString: any) {
+  uploadImage(selectedImage: any, employeeData: any, changeSymbol: any, id: any) {
 
     if (!selectedImage) {
       employeeData.profile = './assets/placeholder-img.png';
       if (!changeSymbol) {
-        this.editData(id, employeeData, selectedLanguagesString);
+        this.editData(id, employeeData);
       } else {
-        this.uploadData(employeeData, selectedLanguagesString);
+        this.uploadData(employeeData);
       }
     } else {
       const filePath = `profile/${Date.now()}`;
@@ -44,17 +44,17 @@ export class UserDataService implements OnInit {
 
           if (!changeSymbol) {
             this.spinner.show();
-            this.editData(id, employeeData, selectedLanguagesString);
+            this.editData(id, employeeData);
           } else {
-            this.uploadData(employeeData, selectedLanguagesString);
+            this.uploadData(employeeData);
           }
         })
       })
     }
   }
 
-  uploadData(employeeData: any, selectedLanguagesString: any) {
-    employeeData.language = selectedLanguagesString;
+  uploadData(employeeData: any) {
+    // employeeData.language = selectedLanguagesString;
 
     this.afs.collection('employee').get().toPromise().then(querySnapshot => {
       if (querySnapshot) {
@@ -84,6 +84,7 @@ export class UserDataService implements OnInit {
   }
 
   loadImg(id: any) {
+    this.spinner.show();
     return this.afs.collection('employee').doc(id).valueChanges();
   }
 
@@ -124,9 +125,11 @@ export class UserDataService implements OnInit {
       })
     }
   }
-  editData(id: any, employeeData: any, selectedLanguagesString: string) {
+  editData(id: any, employeeData: any) {
+
+    this.spinner.show();
     
-    employeeData.language = selectedLanguagesString;
+    // employeeData.language = selectedLanguagesString;
   
     this.afs.collection('employee').doc(id).update(employeeData).then(() => {
       console.log("Data edited");

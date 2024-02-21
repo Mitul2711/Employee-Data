@@ -94,7 +94,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   toppings = new FormControl('');
 
-  languageList: string[] = ['English', 'Hindi', 'Gujarati', 'French', 'German'];
+  languageList: string[] = ['English', 'Hindi', 'Gujarati'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -338,7 +338,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   onSelectionChange(event: any) {
     this.selectedLanguages = event.value;
-    this.selectedLanguagesString = event.value.join(',');
   }
 
   getControl(fieldName: string) {
@@ -365,14 +364,14 @@ export class TableComponent implements OnInit, AfterViewInit {
       email: this.employeeForm.value.email,
       phone: this.employeeForm.value.phone,
       gender: this.employeeForm.value.gender,
-      language: this.employeeForm.value.language,
+      language: this.employeeForm.value.language.join(','),
       dob: this.employeeForm.value.dob,
       salary: this.employeeForm.value.salary,
       profile: ''
     }
     this.spinner.show()
-
-    this.userService.uploadImage(this.selectedImage, userData, this.changeSymbol, this.docId, this.selectedLanguagesString);
+    // this.selectedLanguagesString = this.selectedLanguages.join(',');
+    this.userService.uploadImage(this.selectedImage, userData, this.changeSymbol, this.docId);
 
     this.imgSrc = './assets/placeholder-img.png';
 
@@ -437,18 +436,24 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.userService.loadOneData(id).subscribe((data: any) => {
       this.editingRowData = data;
       this.arrayLang = this.editingRowData.language.split(',');
+      console.log('arrayLang',this.arrayLang)
     });
   }
 
   onEdit(id: any) {
+    this.imageUrl = './assets/placeholder-img.png'
     this.changeSymbol = false;
     this.editingRowId = id;
-
+    
     this.loadEditingRowData(id);
   }
 
   afterEdit() {
-    this.userService.uploadImage(this.selectedImage, this.editingRowData, this.changeSymbol, this.editingRowId, this.selectedLanguagesString);
+    debugger
+    this.spinner.show();
+    this.editingRowData.language = this.arrayLang.join(',');
+    // this.selectedLanguagesString = this.arrayLang.join(', ');
+    this.userService.uploadImage(this.selectedImage, this.editingRowData, this.changeSymbol, this.editingRowId);
     this.editingRowId = '';
     this.changeSymbol = true;
   }

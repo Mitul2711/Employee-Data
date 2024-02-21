@@ -30,8 +30,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> FirstName </th>
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
-                            <mat-form-field>
-                                <input matInput type="text" class="underline-input"
+                            <mat-form-field style="height: 65px; width: 90px">
+                                <input matInput type="text"
                                     [(ngModel)]="editingRowData.firstName" (keypress)="onKey($event)">
                             </mat-form-field>
                         </ng-container>
@@ -47,8 +47,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> LastName </th>
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
-                            <mat-form-field>
-                                <input matInput type="text" class="underline-input"
+                            <mat-form-field style="height: 65px; width: 110px">
+                                <input matInput type="text"
                                     [(ngModel)]="editingRowData.lastName" (keypress)="onKey($event)">
                             </mat-form-field>
                         </ng-container>
@@ -63,8 +63,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
-                            <mat-form-field>
-                                <input matInput type="email" class="underline-input" [(ngModel)]="editingRowData.email">
+                            <mat-form-field style="height: 65px; width: 130px">
+                                <input matInput type="email" [(ngModel)]="editingRowData.email">
                             </mat-form-field>
                         </ng-container>
                         <ng-container *ngIf="editingRowId !== row.id">
@@ -77,8 +77,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone </th>
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
-                            <mat-form-field>
-                                <input matInput type="text" class="underline-input" [(ngModel)]="editingRowData.phone"
+                            <mat-form-field style="height: 65px; width: 130px">
+                                <input matInput type="text" [(ngModel)]="editingRowData.phone"
                                     maxlength="17" appNumericInput (keydown)="onKeyPress($event)">
                             </mat-form-field>
                         </ng-container>
@@ -93,8 +93,8 @@
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
                             <mat-radio-group [(ngModel)]="editingRowData.gender">
-                                <mat-radio-button class="example-margin" value="male">Male</mat-radio-button>
-                                <mat-radio-button class="example-margin" value="female">Female</mat-radio-button>
+                                <mat-radio-button class="redioBtn" value="male">Male</mat-radio-button>
+                                <mat-radio-button class="redioBtn" value="female">Female</mat-radio-button>
                             </mat-radio-group>
                         </ng-container>
                         <ng-container *ngIf="editingRowId !== row.id">
@@ -107,8 +107,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Language </th>
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
-                            <mat-select multiple [(value)]="arrayLang" (selectionChange)="onSelectionChange($event)"
-                                class="select-box">
+                            <mat-select multiple [(ngModel)]="arrayLang" (selectionChange)="onSelectionChange($event)"
+                                class="select-box" style="width: 140px;">
                                 <mat-option *ngFor="let language of languageList" [value]="language">{{ language
                                     }}</mat-option>
                             </mat-select>
@@ -124,9 +124,17 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Dob </th>
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
-                            <input mat-input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" [max]="maxDate"
-                                [min]="minDate" [(ngModel)]="editingRowData.dob" placeholder="Enter your DOB.."
-                                (keydown)="onDate($event)">
+                            <input 
+                                [formControl]="dateFormCtrl"
+                                matInput 
+                                [matDatepicker]="picker" 
+                                [max]="maxDate"
+                                [min]="minDate" 
+                                [(ngModel)]="editingRowData.dob" 
+                                placeholder="Enter your DOB.."
+                                (keydown)="onDate($event)"
+                                style="width: 110px;"
+                                >
                             <mat-hint>MM/DD/YYYY</mat-hint>
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
@@ -141,8 +149,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Salary </th>
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
-                            <mat-form-field>
-                                <input matInput currencyMask type="text" class="underline-input"
+                            <mat-form-field style="height: 65px; width: 100px">
+                                <input matInput currencyMask type="text"
                                     [(ngModel)]="editingRowData.salary" appNumericInput>
                             </mat-form-field>
                         </ng-container>
@@ -156,7 +164,12 @@
                     <th mat-header-cell *matHeaderCellDef> Profile </th>
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
-                            <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+                            <div 
+                                class="drop-zone" 
+                                (drop)="onDrop($event)" 
+                                (dragover)="onDragOver($event)"
+                                style="width: 90px;"
+                                >
                                 <p>Drag & drop an image</p>
                                 <img [src]="imageUrl" height="100px" width="150px">
                                 <div class="image-input-container">
@@ -221,15 +234,13 @@
 
                         <mat-form-field class="mg">
                             <mat-label>FirstName</mat-label>
-                            <input matInput type="text" formControlName="firstName" (keypress)="onKey($event)" in input
-                                field>
+                            <input matInput type="text" formControlName="firstName" (keypress)="onKey($event)">
                             <mat-error>First name is required.</mat-error>
                         </mat-form-field>
 
                         <mat-form-field>
                             <mat-label>LastName</mat-label>
-                            <input matInput type="text" formControlName="lastName" (keypress)="onKey($event)" in input
-                                field>
+                            <input matInput type="text" formControlName="lastName" (keypress)="onKey($event)">
                             <mat-error>Last name is required.</mat-error>
                         </mat-form-field>
 

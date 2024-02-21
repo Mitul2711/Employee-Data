@@ -54,13 +54,13 @@ table {
   top: 0;
   left: 0;
   width: 100%;
-  padding-top: 10px;
+  padding-top: 15px;
   background-color: #fff; 
 }
 
 .form-content {
-  margin-top: 40px;
-  padding-bottom: 50px; 
+  margin-top: 55px;
+  padding-bottom: 10px; 
 }
 
 
@@ -164,9 +164,10 @@ i {
   color: transparent;
 }
 
-
-
-
 .example-full-width {
   width: 100%;
+}
+
+i {
+  margin-bottom: 10px;
 }
