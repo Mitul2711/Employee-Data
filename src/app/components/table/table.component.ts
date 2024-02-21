@@ -374,6 +374,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.userService.uploadImage(this.selectedImage, userData, this.changeSymbol, this.docId);
 
     this.imgSrc = './assets/placeholder-img.png';
+    this.imageUrl = './assets/placeholder-img.png';
 
     this.closeForm();
 
