@@ -152,7 +152,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           phone: ['', Validators.required],
           gender: ['', Validators.required],
           language: ['', Validators.required],
-          dob: ['', Validators.required],
+          dob: ['', Validators.required, this.dateValidator.bind(this)],
           salary: ['', Validators.required],
           profile: ['']
         })
@@ -160,6 +160,20 @@ export class TableComponent implements OnInit, AfterViewInit {
     })
 
   }
+
+  dateValidator(control: any) {
+    const selectedDate = new Date(control.value);
+    const today = new Date();
+    console.log(today);
+    console.log(selectedDate);
+    
+    if (selectedDate > today) {
+      return { invalidDate: true };
+    }
+    return null;
+  }
+  
+
 
 
   applyFilter(event: Event) {
