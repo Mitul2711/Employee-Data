@@ -428,6 +428,10 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
   
   openImageInCard(event: MouseEvent) {
+    const input = document.getElementById('fileInput');
+    if (input) {
+        input.click(); // Trigger click event of file input
+    }
     event.preventDefault();
   }
   

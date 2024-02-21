@@ -134,8 +134,8 @@
                                 placeholder="Enter your DOB.."
                                 (keydown)="onDate($event)"
                                 style="width: 110px;"
+                                placeholder="MM/DD/YYYY"
                                 >
-                            <mat-hint>MM/DD/YYYY</mat-hint>
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
                         </ng-container>
@@ -174,7 +174,7 @@
                                 <img [src]="imageUrl" height="100px" width="150px">
                                 <div class="image-input-container">
                                     <input type="file" class="editImgSelect" (change)="onFileSelected($event)"
-                                        accept="image/*">
+                                        accept="image/*">    
                                 </div>
                             </div>
                         </ng-container>
@@ -292,9 +292,16 @@
 
                         <mat-form-field>
                             <mat-label>DOB</mat-label>
-                            <input matInput [matDatepicker]="datepicker" formControlName="dob" maxlength="10"
-                                (keydown)="onDate($event)" [max]="maxDate" [min]="minDate">
-                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <input 
+                                matInput 
+                                [matDatepicker]="datepicker" 
+                                formControlName="dob" 
+                                maxlength="10"
+                                (keydown)="onDate($event)" 
+                                [max]="maxDate" 
+                                [min]="minDate"
+                                placeholder="MM/DD/YYYY"
+                                >
                             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
                             <mat-datepicker #datepicker></mat-datepicker>
                             <mat-error>Please enter date.</mat-error>
@@ -310,23 +317,19 @@
                     <div class="card">
                         <div class="card-content">
                             <h3>Upload Employee Image</h3>
-                            <div *ngIf="imageUrl" class="image-container" (drop)="onDrop($event)"
-                                (dragover)="onDragOver($event)">
-                                <div class="image-card" (click)="openImageInCard($event)">
-                                    <img [src]="imageUrl">
-                                </div>
+                            <div *ngIf="imageUrl" class="image-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+                                <label for="fileInput" class="image-card">
+                                    <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" formControlName="profile" />
+                                    <img [src]="imageUrl" alt="Employee Image">
+                                </label>
                             </div>
-
+                    
                             <div class="drop-zone">
                                 <p>Drag & drop an image file here</p>
-                                <div class="image-input-container">
-                                    <input type="file" (change)="onFileSelected($event)" accept="image/*"
-                                        formControlName="profile" />
-                                </div>
                             </div>
                         </div>
-                    </div>
-
+                    </div>                  
+                    
                     <button mat-raised-button class="btn" [disabled]="employeeForm.invalid">Submit</button>
                     <button mat-raised-button class="btn" (click)="closeForm()">Back</button>
                 </form>
