@@ -454,7 +454,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   afterEdit() {
-    debugger
     this.spinner.show();
     this.editingRowData.language = this.arrayLang.join(',');
     // this.selectedLanguagesString = this.arrayLang.join(', ');
