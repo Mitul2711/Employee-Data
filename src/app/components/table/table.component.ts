@@ -61,7 +61,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
 
 
 
-export class TableComponent implements OnInit, AfterViewInit {
+export class TableComponent implements OnInit {
 
   displayedColumns: string[] = [
     'srNo',
@@ -343,10 +343,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     return this.employeeForm.controls;
   }
 
-  ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
-  }
+
 
   onSelectionChange(event: any) {
     this.selectedLanguages = event.value;

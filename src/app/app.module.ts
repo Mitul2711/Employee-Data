@@ -22,6 +22,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { TableComponent } from './components/table/table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/module/material.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 
@@ -49,11 +50,11 @@ import { MaterialModule } from 'src/module/material.module';
     MatPaginatorModule,
     MatSortModule,
     MatCardModule,
+    NgxSpinnerModule.forRoot({ type : "square-jelly-box" })
     
-    // MatTableDataSource,
   ],
   providers: [MatSortModule],
-  exports:[],
+  exports:[NgxSpinnerModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
