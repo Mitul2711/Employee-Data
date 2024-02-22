@@ -1,5 +1,6 @@
-<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff"
-   type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+    <p style="color: white"> Loading... </p>
+</ngx-spinner>
 
 <div class="container">
     <button mat-raised-button (click)="openForm()">Add Data</button>
@@ -29,8 +30,17 @@
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
                             <mat-form-field style="height: 65px; width: 90px" appearance="outline">
-                                <input matInput type="text" [(ngModel)]="editingRowData.firstName"
-                                    (keypress)="onKey($event)">
+                                <input matInput type="text" [(ngModel)]="editingRowData.firstName" name="firstName"
+                                    #firstNameInput="ngModel" (keypress)="onKey($event)" required minlength="2"
+                                    maxlength="30">
+                                <mat-error
+                                    *ngIf="firstNameInput.invalid && (firstNameInput.dirty || firstNameInput.touched)">
+                                    <span *ngIf="firstNameInput.errors?.['required']">
+                                        First Name is required.
+                                    </span>
+
+                                </mat-error>
+
                             </mat-form-field>
                         </ng-container>
                         <ng-container *ngIf="editingRowId !== row.id">
@@ -47,7 +57,15 @@
                         <ng-container *ngIf="editingRowId === row.id">
                             <mat-form-field style="height: 65px; width: 110px" appearance="outline">
                                 <input matInput type="text" [(ngModel)]="editingRowData.lastName"
-                                    (keypress)="onKey($event)">
+                                    (keypress)="onKey($event)" #lastNameInput="ngModel" required>
+                                <mat-error
+                                    *ngIf="lastNameInput.invalid && (lastNameInput.dirty || lastNameInput.touched)">
+                                    <span *ngIf="lastNameInput.errors?.['required']">
+                                        Last Name is required.
+                                    </span>
+
+                                </mat-error>
+
                             </mat-form-field>
                         </ng-container>
                         <ng-container *ngIf="editingRowId !== row.id">
@@ -62,7 +80,16 @@
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
                             <mat-form-field style="height: 65px; width: 130px" appearance="outline">
-                                <input matInput type="email" [(ngModel)]="editingRowData.email">
+                                <input matInput type="email" [(ngModel)]="editingRowData.email" #emailInput="ngModel"
+                                    required email>
+                                <mat-error *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)">
+                                    <span *ngIf="emailInput.errors?.['required']">
+                                        Email is required.
+                                    </span>
+                                    <span *ngIf="emailInput.errors?.['email']">
+                                        Please enter valid Email.
+                                    </span>
+                                </mat-error>
                             </mat-form-field>
                         </ng-container>
                         <ng-container *ngIf="editingRowId !== row.id">
@@ -77,7 +104,13 @@
                         <ng-container *ngIf="editingRowId === row.id">
                             <mat-form-field style="height: 65px; width: 130px" appearance="outline">
                                 <input matInput type="text" [(ngModel)]="editingRowData.phone" maxlength="17"
-                                    appNumericInput (keydown)="onKeyPress($event)">
+                                    minlength="17" appNumericInput (keydown)="onKeyPress($event)" #phoneInput="ngModel"
+                                    required>
+                                <mat-error *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)">
+                                    <span *ngIf="phoneInput.errors?.['required']">
+                                        Phone Number is required.
+                                    </span>
+                                </mat-error>
                             </mat-form-field>
                         </ng-container>
                         <ng-container *ngIf="editingRowId !== row.id">
@@ -106,10 +139,15 @@
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
                             <mat-select multiple [(ngModel)]="arrayLang" (selectionChange)="onSelectionChange($event)"
-                                class="select-box" style="width: 140px;">
+                                class="select-box" style="width: 140px;" #langInput="ngModel" required>
                                 <mat-option *ngFor="let language of languageList" [value]="language">{{ language
                                     }}</mat-option>
                             </mat-select>
+                            <mat-error *ngIf="langInput.invalid && (langInput.dirty || langInput.touched)">
+                                <span *ngIf="langInput.errors?.['required']">
+                                    Language is required.
+                                </span>
+                            </mat-error>
                         </ng-container>
                         <ng-container *ngIf="editingRowId !== row.id">
                             {{ row.data.language }}
@@ -123,8 +161,8 @@
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
                             <input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" [max]="maxDate"
-                                [min]="minDate" [(ngModel)]="editingRowData.dob"
-                                (keydown)="onDate($event)" style="width: 110px;" placeholder="MM/DD/YYYY">
+                                [min]="minDate" [(ngModel)]="editingRowData.dob" (keydown)="onDate($event)"
+                                style="width: 110px;" placeholder="MM/DD/YYYY">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
                         </ng-container>
@@ -140,7 +178,12 @@
                         <ng-container *ngIf="editingRowId === row.id">
                             <mat-form-field style="height: 65px; width: 100px" appearance="outline">
                                 <input matInput currencyMask type="text" [(ngModel)]="editingRowData.salary"
-                                    appNumericInput>
+                                    appNumericInput #salaryInput="ngModel" required>
+                                <mat-error *ngIf="salaryInput.invalid && (salaryInput.dirty || salaryInput.touched)">
+                                    <span *ngIf="salaryInput.errors?.['required']">
+                                        Salary is required.
+                                    </span>
+                                </mat-error>    
                             </mat-form-field>
                         </ng-container>
                         <ng-container *ngIf="editingRowId !== row.id">
