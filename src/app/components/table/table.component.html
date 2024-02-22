@@ -125,7 +125,7 @@
                     <td mat-cell *matCellDef="let row">
                         <ng-container *ngIf="editingRowId === row.id">
                             <input [formControl]="dateFormCtrl" matInput [matDatepicker]="picker" [max]="maxDate"
-                                [min]="minDate" [(ngModel)]="editingRowData.dob" placeholder="Enter your DOB.."
+                                [min]="minDate" [(ngModel)]="editingRowData.dob"
                                 (keydown)="onDate($event)" style="width: 110px;" placeholder="MM/DD/YYYY">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>

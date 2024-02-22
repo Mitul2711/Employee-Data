@@ -163,11 +163,8 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 
   dateValidator(control: AbstractControl): { [key: string]: any } | null {
-    console.log("Control value:", control.value);
     const selectedDate = new Date(control.value);
     const today = new Date();
-    console.log("Selected Date:", selectedDate);
-    console.log("Today:", today);
     
     if (selectedDate > today) {
       return { invalidDate: true };
