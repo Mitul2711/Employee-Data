@@ -281,15 +281,16 @@
                             <mat-label>DOB</mat-label>
                             <input matInput [matDatepicker]="datepicker" formControlName="dob" maxlength="10"
                                 (keydown)="onDate($event)" [max]="maxDate" [min]="minDate" placeholder="MM/DD/YYYY">
+
                             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
                             <mat-datepicker #datepicker></mat-datepicker>
+                            <mat-error
+                                *ngIf="getControl('dob')?.hasError('required') && (getControl('dob')?.touched || getControl('dob')?.dirty)">
+                                Please enter date.
+                            </mat-error>
                             <mat-error *ngIf="getControl('dob')?.hasError('invalidDate') && getControl('dob')?.dirty">
                                 Date must not be after today.
                             </mat-error>
-                            <mat-error *ngIf="getControl('dob')?.hasError('required')">
-                                Please enter date.
-                            </mat-error>
-
                         </mat-form-field>
                     </div>
 

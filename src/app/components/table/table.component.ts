@@ -4,7 +4,7 @@ import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { UserData } from 'src/app/model/user-data';
@@ -137,7 +137,7 @@ export class TableComponent implements OnInit, AfterViewInit {
             phone: [this.post.phone, Validators.required],
             gender: [this.post.gender, Validators.required],
             language: [this.post.language, Validators.required],
-            dob: [this.post.dob, Validators.required],
+            dob: [this.post.dob, [Validators.required, this.dateValidator.bind(this)]],
             salary: [this.post.salary, Validators.required],
             profile: ['']
           })
@@ -152,7 +152,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           phone: ['', Validators.required],
           gender: ['', Validators.required],
           language: ['', Validators.required],
-          dob: ['', Validators.required, this.dateValidator.bind(this)],
+          dob: ['', [Validators.required, this.dateValidator.bind(this)]],
           salary: ['', Validators.required],
           profile: ['']
         })
@@ -161,11 +161,13 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   }
 
-  dateValidator(control: any) {
+
+  dateValidator(control: AbstractControl): { [key: string]: any } | null {
+    console.log("Control value:", control.value);
     const selectedDate = new Date(control.value);
     const today = new Date();
-    console.log(today);
-    console.log(selectedDate);
+    console.log("Selected Date:", selectedDate);
+    console.log("Today:", today);
     
     if (selectedDate > today) {
       return { invalidDate: true };
@@ -173,7 +175,6 @@ export class TableComponent implements OnInit, AfterViewInit {
     return null;
   }
   
-
 
 
   applyFilter(event: Event) {
@@ -192,7 +193,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.displayData();
   }
-  
+
   onKeyPress(event: KeyboardEvent) {
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
     if (!allowedKeys.includes(event.key) && isNaN(Number(event.key))) {
@@ -202,11 +203,11 @@ export class TableComponent implements OnInit, AfterViewInit {
       let cursorStart = input.selectionStart ?? 0; // Default to 0 if null
       const cursorEnd = input.selectionEnd ?? 0; // Default to 0 if null
       let inputValue = input.value;
-  
-  
+
+
       // Remove non-numeric characters
       inputValue = inputValue.replace(/\D/g, '');
-  
+
       // Apply mask
       let maskedValue = '';
       let i = 0;
@@ -226,24 +227,24 @@ export class TableComponent implements OnInit, AfterViewInit {
       if (inputValue.length > i) {
         maskedValue += inputValue.substring(i);
       }
-  
+
       // Update input value and cursor position
       input.value = maskedValue;
       // Adjust cursor position to account for added mask characters
       let newCursorPosition = cursorStart + (maskedValue.length - inputValue.length);
-  
+
       // Handle special case when removing characters
       if ((event.key === 'Backspace' || event.key === 'Delete') && cursorStart === cursorEnd && cursorStart > 0) {
         if (inputValue.length === 7 || inputValue.length === 2) {
           newCursorPosition = 3; // Adjust cursor when deleting a group of characters
         }
       }
-  
+
       // Set new cursor position
       input.setSelectionRange(newCursorPosition, newCursorPosition);
     }
   }
-  
+
 
 
   // not able to enter number
@@ -260,7 +261,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     const inputValue = event.key;
     const alphabeticRegex = /^[a-zA-Z]*$/;
     if (!alphabeticRegex.test(inputValue)) {
-      event.preventDefault(); 
+      event.preventDefault();
     }
   }
 
@@ -287,7 +288,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
 
-  
+
   announceSortChange(sortState: Sort, data: any[]) {
     if (sortState.direction) {
       data.sort((a: any, b: any) => {
@@ -415,11 +416,11 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.handleFile(file);
     }
   }
-  
+
   onDragOver(event: DragEvent) {
     event.preventDefault();
   }
-  
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -430,32 +431,32 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.selectedImage = null;
     }
   }
-  
+
   private handleFile(file: File) {
     const reader = new FileReader();
     reader.onload = () => {
-      const base64String = reader.result as string; 
+      const base64String = reader.result as string;
       this.imageUrl = base64String;
       this.selectedImage = file;
     };
     reader.readAsDataURL(file);
   }
-  
+
   openImageInCard(event: MouseEvent) {
     const input = document.getElementById('fileInput');
     if (input) {
-        input.click(); // Trigger click event of file input
+      input.click(); // Trigger click event of file input
     }
     event.preventDefault();
   }
-  
+
   // edit Data
 
   loadEditingRowData(id: any) {
     this.userService.loadOneData(id).subscribe((data: any) => {
       this.editingRowData = data;
       this.arrayLang = this.editingRowData.language.split(',');
-      console.log('arrayLang',this.arrayLang)
+      console.log('arrayLang', this.arrayLang)
     });
   }
 
@@ -463,7 +464,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.imageUrl = './assets/placeholder-img.png'
     this.changeSymbol = false;
     this.editingRowId = id;
-    
+
     this.loadEditingRowData(id);
   }
 
