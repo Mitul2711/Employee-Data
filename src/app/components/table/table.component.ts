@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Directive, ElementRef, HostListener, NgModule, OnInit, ViewChild } from '@angular/core';
+import {  Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 
@@ -261,7 +261,6 @@ export class TableComponent implements OnInit {
       event.preventDefault();
     }
   }
-
   onDate(event: KeyboardEvent) {
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
     const input = event.target as HTMLInputElement;
@@ -269,21 +268,24 @@ export class TableComponent implements OnInit {
     const key = event.key;
 
     if (!allowedKeys.includes(key) && isNaN(Number(key))) {
-      event.preventDefault();
-    } else {
-      if (key === 'Backspace' || key === 'Delete') {
-        return;
-      }
-
-      if (inputValue.length === 2 || inputValue.length === 5) {
-        input.value += '/';
-      }
-
-      if (inputValue.length >= 10) {
         event.preventDefault();
-      }
+    } else {
+        if (key === 'Backspace' || key === 'Delete') {
+            return;
+        } else if (key === 'ArrowLeft' || key === 'ArrowRight') {
+            // Allow arrow keys for navigation
+            return;
+        }
+
+        if (inputValue.length === 2 || inputValue.length === 5) {
+            input.value += '/';
+        }
+
+        if (inputValue.length >= 10) {
+            event.preventDefault();
+        }
     }
-  }
+}
 
 
   announceSortChange(sortState: Sort, data: any[]) {
