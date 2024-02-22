@@ -162,7 +162,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
 
-  dateValidator(control: AbstractControl): { [key: string]: any } | null {
+  dateValidator(control: AbstractControl) {
     const selectedDate = new Date(control.value);
     const today = new Date();
     
