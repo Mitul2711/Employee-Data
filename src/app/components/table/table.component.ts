@@ -30,7 +30,6 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   thousands: ","
 };
 
-
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -56,7 +55,6 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     MatSortModule,
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
   ]
-
 })
 
 
@@ -107,8 +105,14 @@ export class TableComponent implements OnInit {
   post: any;
   editingRowData: any;
   isLoading: boolean;
-  base64Image: SafeResourceUrl | undefined;
+  base64Image: SafeResourceUrl | undefined;  
 
+
+
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
 
   constructor(
     private fb: FormBuilder,
@@ -117,7 +121,8 @@ export class TableComponent implements OnInit {
     private _liveAnnouncer: LiveAnnouncer,
     private spinner: NgxSpinnerService,
     private sanitizer: DomSanitizer
-  ) {
+  ) 
+  {
 
     this.maxDate = new Date();
     this.minDate = new Date();
@@ -182,7 +187,11 @@ export class TableComponent implements OnInit {
     } else {
       this.dataSource.data = this.dataSource.data.filter((item: any) => {
         return item.data.firstName.toLowerCase().includes(filterValue) ||
-          item.data.lastName.toLowerCase().includes(filterValue);
+          item.data.lastName.toLowerCase().includes(filterValue) ||
+          item.data.email.toLowerCase().includes(filterValue) ||
+          item.data.phone.toLowerCase().includes(filterValue) ||
+          item.data.gender.toLowerCase().includes(filterValue) ||
+          item.data.language.toLowerCase().includes(filterValue)
       });
     }
   }

@@ -186,3 +186,7 @@ i {
 i {
   margin-bottom: 10px;
 }
+
+.custom-width {
+  width: 250px; /* Adjust the width as per your requirement */
+}
