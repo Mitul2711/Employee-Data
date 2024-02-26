@@ -1,4 +1,4 @@
-import {  Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 
@@ -105,14 +105,13 @@ export class TableComponent implements OnInit {
   post: any;
   editingRowData: any;
   isLoading: boolean;
-  base64Image: SafeResourceUrl | undefined;  
+  base64Image: SafeResourceUrl | undefined;
+  data: any;
+  range: FormGroup
+  startDate: any;
+  endDate: any;
 
 
-
-  range = new FormGroup({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
-  });
 
   constructor(
     private fb: FormBuilder,
@@ -121,8 +120,12 @@ export class TableComponent implements OnInit {
     private _liveAnnouncer: LiveAnnouncer,
     private spinner: NgxSpinnerService,
     private sanitizer: DomSanitizer
-  ) 
-  {
+  ) {
+
+    this.range = fb.group({
+      start: [''],
+      end: ['']
+    })
 
     this.maxDate = new Date();
     this.minDate = new Date();
@@ -163,20 +166,35 @@ export class TableComponent implements OnInit {
         })
       }
     })
-
   }
 
+  searchByDateRange() {
+    
+    this.startDate = this.range.value.start;
+    this.endDate = this.range.value.end;
+
+    if (this.startDate == null || this.endDate == null) {
+      this.displayData();
+    } else {
+      this.dataSource.data = this.dataSource.data.filter((item: any) => {
+        const dobTimestamp = item.data.dob;
+        const dobDate = dobTimestamp.toDate();
+        
+        return dobDate >= this.startDate && dobDate <= this.endDate;
+      });
+    }
+  }
 
   dateValidator(control: AbstractControl) {
     const selectedDate = new Date(control.value);
     const today = new Date();
-    
+
     if (selectedDate > today) {
       return { invalidDate: true };
     }
     return null;
   }
-  
+
 
 
   applyFilter(event: Event) {
@@ -270,6 +288,7 @@ export class TableComponent implements OnInit {
       event.preventDefault();
     }
   }
+
   onDate(event: KeyboardEvent) {
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
     const input = event.target as HTMLInputElement;
@@ -277,24 +296,24 @@ export class TableComponent implements OnInit {
     const key = event.key;
 
     if (!allowedKeys.includes(key) && isNaN(Number(key))) {
-        event.preventDefault();
+      event.preventDefault();
     } else {
-        if (key === 'Backspace' || key === 'Delete') {
-            return;
-        } else if (key === 'ArrowLeft' || key === 'ArrowRight') {
-            // Allow arrow keys for navigation
-            return;
-        }
+      if (key === 'Backspace' || key === 'Delete') {
+        return;
+      } else if (key === 'ArrowLeft' || key === 'ArrowRight') {
+        // Allow arrow keys for navigation
+        return;
+      }
 
-        if (inputValue.length === 2 || inputValue.length === 5) {
-            input.value += '/';
-        }
+      if (inputValue.length === 2 || inputValue.length === 5) {
+        input.value += '/';
+      }
 
-        if (inputValue.length >= 10) {
-            event.preventDefault();
-        }
+      if (inputValue.length >= 10) {
+        event.preventDefault();
+      }
     }
-}
+  }
 
 
   announceSortChange(sortState: Sort, data: any[]) {
@@ -461,7 +480,6 @@ export class TableComponent implements OnInit {
     this.userService.loadOneData(id).subscribe((data: any) => {
       this.editingRowData = data;
       this.arrayLang = this.editingRowData.language.split(',');
-      console.log('arrayLang', this.arrayLang)
     });
   }
 
