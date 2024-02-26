@@ -177,18 +177,24 @@ export class TableComponent implements OnInit {
     this.startDate = this.range.value.start;
     this.endDate = this.range.value.end;
 
-    if (this.startDate !== null && this.endDate !== null) {
-        if (this.startDate instanceof Date && this.endDate instanceof Date) {
-            this.dataSource.data = this.dataSource.data.filter((item: any) => {      
-                return item.data.dob.toDate() >= this.startDate && item.data.dob.toDate() <= this.endDate;
-            });
-        } else {
-            console.error("Invalid date format");
-        }
+    // Check if both start date and end date are entered
+    if (this.startDate === null && this.endDate === null) {
+        this.displayData();
     } else {
-        console.error("Both start date and end date are required");
+        if (this.startDate !== null && this.endDate !== null) {
+            if (this.startDate instanceof Date && this.endDate instanceof Date) {
+                this.dataSource.data = this.dataSource.data.filter((item: any) => {      
+                    return item.data.dob.toDate() >= this.startDate && item.data.dob.toDate() <= this.endDate;
+                });
+            } else {
+                console.error("Invalid date format");
+            }
+        } else {
+            console.error("Both start date and end date are required");
+        }
     }
 }
+
 
 
 
