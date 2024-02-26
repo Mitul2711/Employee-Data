@@ -167,23 +167,31 @@ export class TableComponent implements OnInit {
       }
     })
   }
+  
 
-  searchByDateRange() {
-    
+  searchByDateRange(event: any) {
+    if (event.key !== 'Enter') {
+        return; 
+    }
+
     this.startDate = this.range.value.start;
     this.endDate = this.range.value.end;
 
-    if (this.startDate == null || this.endDate == null) {
-      this.displayData();
+    if (this.startDate !== null && this.endDate !== null) {
+        if (this.startDate instanceof Date && this.endDate instanceof Date) {
+            this.dataSource.data = this.dataSource.data.filter((item: any) => {      
+                return item.data.dob.toDate() >= this.startDate && item.data.dob.toDate() <= this.endDate;
+            });
+        } else {
+            console.error("Invalid date format");
+        }
     } else {
-      this.dataSource.data = this.dataSource.data.filter((item: any) => {
-        const dobTimestamp = item.data.dob;
-        const dobDate = dobTimestamp.toDate();
-        
-        return dobDate >= this.startDate && dobDate <= this.endDate;
-      });
+        console.error("Both start date and end date are required");
     }
-  }
+}
+
+
+
 
   dateValidator(control: AbstractControl) {
     const selectedDate = new Date(control.value);
