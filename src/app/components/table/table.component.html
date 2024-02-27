@@ -28,13 +28,13 @@
                 Please enter start date.
             </mat-error>
             <mat-error *ngIf="getAccess('start')?.hasError('invalidDate') && getAccess('start')?.dirty && !errorTriggered">
-                Date must not be after today.
+                Start Date must not be after today.
             </mat-error>
             <mat-error *ngIf="getAccess('end')?.hasError('required') && (getAccess('end')?.touched || getAccess('end')?.dirty) && !errorTriggered">
                 Please enter end date.
             </mat-error>
             <mat-error *ngIf="getAccess('end')?.hasError('invalidDate') && getAccess('end')?.dirty && !errorTriggered">
-                Date must not be after today.
+                End Date must not be after today.
             </mat-error>
             
 

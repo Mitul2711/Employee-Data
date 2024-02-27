@@ -211,6 +211,8 @@ resetError() {
 
   removeFilter() {
     this.range.reset();
+    this.displayData();
+    this.errorTriggered = false;
   }
 
   dateValidator(control: AbstractControl) {

@@ -194,3 +194,7 @@ i {
 .filter {
   margin-left: 15px;
 }
+
+.mat-elevation-z8 {
+  margin-top: 20px;
+}
