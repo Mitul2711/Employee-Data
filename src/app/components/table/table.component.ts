@@ -77,7 +77,6 @@ export class TableComponent implements OnInit {
 
   employeeForm: FormGroup;
   editForm: FormGroup;
-
   dataSource: MatTableDataSource<any>;
   selectedImage: any;
   formVisible: boolean = false;
@@ -88,7 +87,7 @@ export class TableComponent implements OnInit {
   minDate = new Date();
   selectedLanguagesString: string = '';
   arrayLang: any;
-
+  errorTriggered: boolean = false;
 
   toppings = new FormControl('');
 
@@ -123,8 +122,8 @@ export class TableComponent implements OnInit {
   ) {
 
     this.range = fb.group({
-      start: [''],
-      end: ['']
+      start: ['', [Validators.required, this.dateValidator.bind(this)]],
+      end: ['', [Validators.required, this.dateValidator.bind(this)]]
     })
 
     this.maxDate = new Date();
@@ -167,37 +166,52 @@ export class TableComponent implements OnInit {
       }
     })
   }
-  
+
 
   searchByDateRange(event: any) {
     if (event.key !== 'Enter') {
-        return; 
+      return;
     }
 
     this.startDate = this.range.value.start;
     this.endDate = this.range.value.end;
 
-    // Check if both start date and end date are entered
     if (this.startDate === null && this.endDate === null) {
-        this.displayData();
+      this.displayData();
     } else {
-        if (this.startDate !== null && this.endDate !== null) {
-            if (this.startDate instanceof Date && this.endDate instanceof Date) {
-                this.dataSource.data = this.dataSource.data.filter((item: any) => {      
-                    return item.data.dob.toDate() >= this.startDate && item.data.dob.toDate() <= this.endDate;
-                });
-            } else {
-                console.error("Invalid date format");
-            }
+      if (this.startDate !== null && this.endDate !== null) {
+        if (this.startDate instanceof Date && this.endDate instanceof Date) {
+          this.dataSource.data = this.dataSource.data.filter((item: any) => {
+            return item.data.dob.toDate() >= this.startDate && item.data.dob.toDate() <= this.endDate;
+          });
         } else {
-            console.error("Both start date and end date are required");
+          console.error("Invalid date format");
         }
+      } else {
+        console.error("Both start date and end date are required");
+      }
     }
+  }
+
+triggerValidation() {
+    this.errorTriggered = true;
+    this.range.controls['start'].markAsTouched();
+    this.range.controls['end'].markAsTouched();
+}
+
+resetError() {
+    this.errorTriggered = false;
 }
 
 
+  applySearch() {
+    this.triggerValidation();
+    this.searchByDateRange({ key: 'Enter' });
+  }
 
-
+  removeFilter() {
+    this.range.reset();
+  }
 
   dateValidator(control: AbstractControl) {
     const selectedDate = new Date(control.value);
@@ -381,14 +395,6 @@ export class TableComponent implements OnInit {
 
   }
 
-
-
-  get fc() {
-    return this.employeeForm.controls;
-  }
-
-
-
   onSelectionChange(event: any) {
     this.selectedLanguages = event.value;
   }
@@ -397,6 +403,9 @@ export class TableComponent implements OnInit {
     return this.employeeForm.get(fieldName);
   }
 
+  getAccess(fieldName: string) {
+    return this.range.get(fieldName);
+  }
 
   openForm() {
     this.formVisible = true;

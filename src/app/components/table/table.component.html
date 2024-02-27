@@ -15,18 +15,37 @@
 
         <mat-form-field class="custom-width">
             <mat-label>Enter a date range</mat-label>
-            <mat-date-range-input 
-                [formGroup]="range" 
-                [max]="maxDate" [min]="minDate" 
-                (keydown)="searchByDateRange($event)" 
-                (keydown)="onDate($event)"
+            <mat-date-range-input [formGroup]="range" [max]="maxDate" [min]="minDate" (keydown)="onDate($event)"
                 [rangePicker]="picker">
-                <input matStartDate formControlName="start" placeholder="Start date">
+                <input matInput matStartDate formControlName="start" placeholder="Start date" required>
                 <input matEndDate formControlName="end" placeholder="End date">
             </mat-date-range-input>
+
+            <mat-error *ngIf="errorTriggered && range.invalid">
+                Please enter range of date.
+            </mat-error>
+            <mat-error *ngIf="getAccess('start')?.hasError('required') && (getAccess('start')?.touched || getAccess('start')?.dirty) && !errorTriggered">
+                Please enter start date.
+            </mat-error>
+            <mat-error *ngIf="getAccess('start')?.hasError('invalidDate') && getAccess('start')?.dirty && !errorTriggered">
+                Date must not be after today.
+            </mat-error>
+            <mat-error *ngIf="getAccess('end')?.hasError('required') && (getAccess('end')?.touched || getAccess('end')?.dirty) && !errorTriggered">
+                Please enter end date.
+            </mat-error>
+            <mat-error *ngIf="getAccess('end')?.hasError('invalidDate') && getAccess('end')?.dirty && !errorTriggered">
+                Date must not be after today.
+            </mat-error>
+            
+
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
+        
+        
+
+        <button class="filter" mat-raised-button (click)="triggerValidation(); resetError(); applySearch()">Filter</button>
+        <button class="filter" mat-raised-button (click)="removeFilter()">Remove Filter</button>
 
 
         <div class="mat-elevation-z8">

@@ -190,3 +190,7 @@ i {
 .custom-width {
   width: 250px; /* Adjust the width as per your requirement */
 }
+
+.filter {
+  margin-left: 15px;
+}
