@@ -353,35 +353,44 @@ export class TableComponent implements OnInit {
     }
   }
 
+  previousSortState: Sort = { active: '', direction: '' };
+  originalData: any[] = [];
+  
 
   announceSortChange(sortState: Sort, data: any[]) {
+    // Store the original order of data if it's not already stored
+    if (this.originalData.length === 0) {
+      this.originalData = this.userDataArray;
+    }
+
     if (sortState.direction) {
       data.sort((a: any, b: any) => {
-        if (sortState.active === 'srNo') {
-          return sortState.direction === 'asc' ? a.data.srNo - b.data.srNo : b.data.srNo - a.data.srNo;
-        } else if (sortState.active === 'firstName') {
-          return sortState.direction === 'asc' ? a.data.firstName.localeCompare(b.data.firstName) : b.data.firstName.localeCompare(a.data.firstName);
-        } else if (sortState.active === 'lastName') {
-          return sortState.direction === 'asc' ? a.data.lastName.localeCompare(b.data.lastName) : b.data.lastName.localeCompare(a.data.lastName);
-        } else if (sortState.active === 'email') {
-          return sortState.direction === 'asc' ? a.data.email.localeCompare(b.data.email) : b.data.email.localeCompare(a.data.email);
-        } else if (sortState.active === 'phone') {
-          return sortState.direction === 'asc' ? a.data.phone - b.data.phone : b.data.phone - a.data.phone;
-        } else if (sortState.active === 'gender') {
-          return sortState.direction === 'asc' ? a.data.gender.localeCompare(b.data.gender) : b.data.gender.localeCompare(a.data.gender);
-        } else if (sortState.active === 'language') {
-          return sortState.direction === 'asc' ? a.data.language.localeCompare(b.data.language) : b.data.language.localeCompare(a.data.language);
-        } else if (sortState.active === 'dob') {
-          return sortState.direction === 'asc' ? a.data.dob - b.data.dob : b.data.dob - a.data.dob;
-        } else if (sortState.active === 'salary') {
-          return sortState.direction === 'asc' ? a.data.salary - b.data.salary : b.data.salary - a.data.salary;
-        } else {
-          return 0;
-        }
+          if (sortState.active === 'srNo') {
+              return sortState.direction === 'asc' ? a.data.srNo - b.data.srNo : b.data.srNo - a.data.srNo;
+          } else if (sortState.active === 'firstName') {
+              return sortState.direction === 'asc' ? a.data.firstName.localeCompare(b.data.firstName) : b.data.firstName.localeCompare(a.data.firstName);
+          } else if (sortState.active === 'lastName') {
+              return sortState.direction === 'asc' ? a.data.lastName.localeCompare(b.data.lastName) : b.data.lastName.localeCompare(a.data.lastName);
+          } else if (sortState.active === 'email') {
+              return sortState.direction === 'asc' ? a.data.email.localeCompare(b.data.email) : b.data.email.localeCompare(a.data.email);
+          } else if (sortState.active === 'phone') {
+              return sortState.direction === 'asc' ? a.data.phone - b.data.phone : b.data.phone - a.data.phone;
+          } else if (sortState.active === 'gender') {
+              return sortState.direction === 'asc' ? a.data.gender.localeCompare(b.data.gender) : b.data.gender.localeCompare(a.data.gender);
+          } else if (sortState.active === 'language') {
+              return sortState.direction === 'asc' ? a.data.language.localeCompare(b.data.language) : b.data.language.localeCompare(a.data.language);
+          } else if (sortState.active === 'dob') {
+              return sortState.direction === 'asc' ? a.data.dob - b.data.dob : b.data.dob - a.data.dob;
+          } else if (sortState.active === 'salary') {
+              return sortState.direction === 'asc' ? a.data.salary - b.data.salary : b.data.salary - a.data.salary;
+          } else {
+              return 0;
+          }
       });
-
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending by ${sortState.active}`);
     } else {
+      // If sorting is cleared, restore data to its original order
+      data.splice(0, data.length, ...this.originalData);
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
