@@ -296,13 +296,13 @@
 
                         <mat-form-field class="mg" appearance="outline">
                             <mat-label>FirstName</mat-label>
-                            <input matInput type="text" formControlName="firstName" (keypress)="onKey($event)">
+                            <input matInput type="text" formControlName="firstName" (keypress)="onKey($event)" [errorStateMatcher]="matcher">
                             <mat-error>First name is required.</mat-error>
                         </mat-form-field>
 
                         <mat-form-field appearance="outline">
                             <mat-label>LastName</mat-label>
-                            <input matInput type="text" formControlName="lastName" (keypress)="onKey($event)">
+                            <input matInput type="text" formControlName="lastName" (keypress)="onKey($event)" [errorStateMatcher]="matcher">
                             <mat-error>Last name is required.</mat-error>
                         </mat-form-field>
 
@@ -311,7 +311,7 @@
                     <div class="box">
                         <mat-form-field class="mg" appearance="outline">
                             <mat-label>Email</mat-label>
-                            <input matInput type="email" formControlName="email" placeholder="example@gmail.com">
+                            <input matInput type="email" formControlName="email" placeholder="example@gmail.com" [errorStateMatcher]="matcher">
                             <mat-error
                                 *ngIf="getControl('email')?.hasError('required') && (getControl('email')?.touched || getControl('email')?.dirty)">
                                 Email is required.
@@ -324,7 +324,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Phone</mat-label>
                             <input matInput type="text" formControlName="phone" minlength="17" maxlength="17"
-                                (keydown)="onKeyPress($event)" placeholder="(+91) 00000 00000">
+                                (keydown)="onKeyPress($event)" placeholder="(+91) 00000 00000" [errorStateMatcher]="matcher">
                             <mat-error>Phone Number is required</mat-error>
 
                         </mat-form-field>
@@ -343,7 +343,7 @@
                         <mat-form-field class="mg" appearance="outline">
                             <mat-label>Language</mat-label>
                             <mat-select formControlName="language" value="lang" multiple
-                                (selectionChange)="onSelectionChange($event)">
+                                (selectionChange)="onSelectionChange($event)" [errorStateMatcher]="matcher">
                                 <mat-option *ngFor="let language of languageList" [value]="language">{{ language
                                     }}</mat-option>
                             </mat-select>
@@ -354,7 +354,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>DOB</mat-label>
                             <input matInput [matDatepicker]="datepicker" formControlName="dob" maxlength="10"
-                                (keydown)="onDate($event)" [max]="maxDate" [min]="minDate" placeholder="MM/DD/YYYY">
+                                (keydown)="onDate($event)" [max]="maxDate" [min]="minDate" placeholder="MM/DD/YYYY" [errorStateMatcher]="matcher">
 
                             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
                             <mat-datepicker #datepicker></mat-datepicker>
@@ -370,7 +370,7 @@
 
                     <mat-form-field appearance="outline">
                         <mat-label>Salary</mat-label>
-                        <input currencyMask matInput type="text" formControlName="salary" appNumericInput>
+                        <input currencyMask matInput type="text" formControlName="salary" appNumericInput [errorStateMatcher]="matcher">
                         <mat-error>Please enter salary amount</mat-error>
                     </mat-form-field>
 

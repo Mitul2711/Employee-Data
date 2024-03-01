@@ -4,8 +4,8 @@ import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatNativeDateModule } from '@angular/material/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ErrorStateMatcher, MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { UserData } from 'src/app/model/user-data';
 import { UserDataService } from 'src/app/services/user-data.service';
@@ -19,6 +19,13 @@ import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MaterialModule } from 'src/module/material.module';
 
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -75,6 +82,7 @@ export class TableComponent implements OnInit {
     'action'
   ];
 
+  matcher = new MyErrorStateMatcher();
   employeeForm: FormGroup;
   editForm: FormGroup;
   dataSource: MatTableDataSource<any>;
