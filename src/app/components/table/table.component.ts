@@ -193,15 +193,15 @@ export class TableComponent implements OnInit {
     }
   }
 
-triggerValidation() {
+  triggerValidation() {
     this.errorTriggered = true;
     this.range.controls['start'].markAsTouched();
     this.range.controls['end'].markAsTouched();
-}
+  }
 
-resetError() {
+  resetError() {
     this.errorTriggered = false;
-}
+  }
 
 
   applySearch() {
@@ -448,11 +448,13 @@ resetError() {
 
   deleteData(profile: any, docId: any) {
 
-    this.spinner.show();
 
     if (confirm("want to delete this data..")) {
+      this.spinner.show();
+
       this.userService.deleteImage(profile, docId);
     }
+
   }
 
 
