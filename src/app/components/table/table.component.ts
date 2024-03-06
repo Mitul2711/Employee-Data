@@ -59,7 +59,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     NgxSpinnerModule
   ],
   providers: [
-    MatSortModule,
+    // MatSortModule,
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
   ]
 })
@@ -403,6 +403,8 @@ export class TableComponent implements OnInit {
     this.userService.loadData().subscribe(val => {
 
       this.userDataArray = val;
+      console.log(this.userDataArray);
+      
       this.dataSource = new MatTableDataSource(
         this.userDataArray.map((item: { id: any; data: any; }) => ({ id: item.id, data: item.data }))
       );
@@ -527,10 +529,14 @@ export class TableComponent implements OnInit {
     });
   }
 
+  isAddDataButtonDisabled: boolean = false;
+
   onEdit(id: any) {
     this.imageUrl = './assets/placeholder-img.png'
     this.changeSymbol = false;
     this.editingRowId = id;
+
+    this.isAddDataButtonDisabled = true;
 
     this.loadEditingRowData(id);
   }

@@ -3,7 +3,7 @@
 </ngx-spinner>
 
 <div class="container">
-    <button mat-raised-button (click)="openForm()">Add Data</button>
+    <button mat-raised-button (click)="openForm()" [disabled]="isAddDataButtonDisabled">Add Data</button>
 </div>
 
 <mat-card>
