@@ -141,6 +141,8 @@ export class TableComponent implements OnInit {
 
     this.route.queryParams.subscribe(val => {
       this.docId = val['id'];
+      console.log(this.docId);
+      
       if (this.docId) {
         this.userService.loadOneData(this.docId).subscribe(post => {
           this.post = post;
